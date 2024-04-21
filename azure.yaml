@@ -1,0 +1,36 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/Azure/azure-dev/main/schemas/v1.0/azure.yaml.json
+# To learn more about the azure.yaml file, visit https://learn.microsoft.com/en-us/azure/developer/azure-developer-cli/azd-schema
+name: azd-bun-starter
+services:
+  azure-bun-starter:
+    language: js
+    project: ./src
+    host: containerapp
+    docker:
+      path: ./Dockerfile
+      ports:
+        - 80:3000
+hooks:
+  preup:
+    posix:
+      shell: sh
+      run: ./scripts/preup-hook.sh
+      interactive: true
+      continueOnError: false
+  postprovision:
+    windows:
+      shell: pwsh
+      run: $output = azd env get-values; Add-Content -Path .env -Value $output;
+      interactive: true
+      continueOnError: false
+    posix:
+      shell: sh
+      run: ./scripts/postprovision-hook.sh
+      interactive: true
+      continueOnError: false
+  postdown:
+    posix:
+      shell: sh
+      run: ./scripts/postdown-hook.sh
+      interactive: true
+      continueOnError: false
