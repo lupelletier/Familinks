@@ -14,12 +14,12 @@ datasource db {
 }
 
 model User {
-  id       Int     @id @default(autoincrement())
-  email    String  @unique
+  id        Int     @id @default(autoincrement())
+  email     String  @unique
   firstname String?
   lastname  String?
-  family   Family  @relation(fields: [familyId], references: [id])
-  familyId Int
+  family    Family  @relation(fields: [familyId], references: [id])
+  familyId  Int
 }
 
 model Family {

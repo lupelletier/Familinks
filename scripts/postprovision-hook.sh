@@ -1,6 +1,6 @@
-#!/bin/bash
-
-. $XDG_CONFIG_HOME/myscripts/tools.sh
+#!/usr/local/bin/bash
+ROOT_DIR=$(git rev-parse --show-toplevel)
+. $ROOT_DIR/scripts/myscripts/tools.sh
 
 in_git_repo=$(git rev-parse --is-inside-work-tree 2>/dev/null)
 [ "$in_git_repo" != "true" ] && log_error "Not in a git worktree... aborting!" && exit 1
@@ -16,7 +16,7 @@ secret_name=$(cat $ROOT_DIR/.env | grep AZURE_DB_SECRET_NAME | cut -d '=' -f2 | 
 keyvault=$(cat $ROOT_DIR/.env | grep AZURE_KEY_VAULT | cut -d '=' -f2 | tr -d '"')
 log_info "Fetching secret $secret_name from Azure Key Vault $keyvault"
 
-KV_ID=$(az graph query -q "Resources | where type == 'microsoft.keyvault/vaults' | where name == '$keyvault'" | jq -r '.data[].id')
+# KV_ID=$(az graph query -q "Resources | where type == 'microsoft.keyvault/vaults' | where name == '$keyvault'" | jq -r '.data[].id')
 
 DATABASE_URL=$(az keyvault secret show --name $secret_name --vault-name $keyvault | jq -r '.value')
 
