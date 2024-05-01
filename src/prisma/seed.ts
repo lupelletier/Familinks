@@ -14,13 +14,17 @@ const main = async () => {
     console.log('Removing previous data...')
     await prisma.user.deleteMany();
     await prisma.family.deleteMany();
+    await prisma.question.deleteMany();
+    await prisma.response.deleteMany();
+
+    console.log('Previous data removed.')
 
     const familySeed = new FamilySeed(10);
 
     for (const family of familySeed.data) {
       const numberOfUsers = Math.floor(Math.random() * 10) + 1;
       console.log("Seeding new family: '" + family.name + "' with " + numberOfUsers + " users")
-      const userSeed = new UserSeed(numberOfUsers);
+      const userSeed = new UserSeed(numberOfUsers, family.id_family);
       await prisma.family.create({
         data: {
           ...(family as any),
