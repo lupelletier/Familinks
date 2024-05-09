@@ -6,14 +6,18 @@ import Seeder from "./Seeder";
 const uniqueEnforcerEmail = new UniqueEnforcer(); // Ensures unique emails
 
 class UserSeed extends Seeder {
-  constructor(count = 10, familyId = null) { // Default count is 10, and optional familyId
+  family_id: number| null;
+
+  constructor(count = 10, familyId = null) {
     super(count);
     this.count = count;
+    this.family_id = familyId;
     this.createData();
   }
-
   createData() {
     this._data = []; // Ensure data array is initialized
+    console.log(this.family_id);
+
     range(this.count).forEach(() => {
       const firstName = faker.person.firstName();
       const lastName = faker.person.lastName();
@@ -21,7 +25,7 @@ class UserSeed extends Seeder {
       const email = uniqueEnforcerEmail.enforce(() => {
         return faker.internet.email({ firstName, lastName });
       });
-      const phone = faker.phone.number('+1 ###-###-####'); // Generate a phone number
+      const phone = faker.phone.number(); // Generate a phone number
 
       this._data.push({
         username: username, // Set username

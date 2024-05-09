@@ -1,7 +1,8 @@
 import { faker } from "@faker-js/faker";
 import range from "lodash/range";
 import { UniqueEnforcer } from 'enforce-unique'; // Ensures uniqueness of names
-import Seeder from "./Seeder"; // Base class for seeding data
+import Seeder from "./Seeder";
+import UserSeed from "./userSeeder"; // Base class for seeding data
 
 const uniqueEnforcerFamily = new UniqueEnforcer(); // Ensures family names are unique
 
@@ -17,10 +18,16 @@ class FamilySeed extends Seeder {
       const familyName = uniqueEnforcerFamily.enforce(() => {
         return faker.person.lastName(); // Generate a fake last name
       });
+      const numberOfUsers = Math.floor(Math.random() * 10) + 1;
+      const users = new UserSeed(numberOfUsers);
+
 
       this._data.push({
         name: familyName,
-        code: faker.string.alphanumeric(8), // Generate an 8-character alphanumeric code
+        code: faker.string.alphanumeric(8),
+        User: {
+          create: users,
+        }
       });
     });
   }

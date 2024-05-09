@@ -17,7 +17,7 @@ COPY prisma prisma
 
 COPY tsconfig.json .
 COPY tailwind.config.js .
-COPY postcss.config.js .
+COPY postcss.config.cjs .
 COPY vite.config.js .
 
 RUN bunx prisma generate
