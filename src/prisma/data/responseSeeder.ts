@@ -1,38 +1,54 @@
 import { faker } from "@faker-js/faker";
 import Seeder from "./Seeder";
 import {Family, User} from "@prisma/client";
+import QuestionSeed from "./questionSeeder";
+import range from "lodash/range";
+import {getUsersByFamilyName} from "~/utils/db";
 
 class ResponseSeed extends Seeder {
-    random_user: User;
-    family: Family;
+    families: Family[];
 
-    constructor(count = 1, random_user: User, family: Family) {
+
+    constructor(count = 1,  families: Family[]) {
         super(count);
         this.count = count;
-        this.random_user = random_user;
-        this.family = family;
+        this.families = families;
         this.createData();
-
     }
 
-    createData() {
+
+    async createData() {
         console.log('response in creation...')
         this._data = [];
-        this._data.push({
-            response: faker.lorem.sentence(),
-            User : {
-                connect: {
-                    id_user: this.random_user.id_user,
-                },
-            },
-            Family: {
-                connect: {
-                    id_family: this.random_user.familyId,
-                }
+        for(const family of this.families) {
+            const family_users = await getUsersByFamilyName(family.name);
+            const nb_answers = Math.ceil(0.6 * family_users.length);
+            for (let i = 0; i < nb_answers; i++) {
+                const random_user = faker.helpers.arrayElement(family_users);
+                this._data.push({
+                    response: faker.lorem.sentence(),
+                    /*                    id_user: random_user.id_user,
+                                        id_family: random_user.familyId,
+                                        id_question: id_question,*/
+                    User: {
+                        connect: {
+                            id_user: random_user.id_user,
+                        },
+                    },
+                    Family: {
+                        connect: {
+                            id_family: random_user.familyId,
+                        }
+                    },
+/*                    Question: {
+                        connect: {
+                            id_question: id_question,
+                        }
+                    }*/
+                });
             }
-        });
         console.log('response created...')
-
+        }
     }
 }
 

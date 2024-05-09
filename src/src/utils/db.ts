@@ -32,7 +32,7 @@ export const getUsersByFamilyName = async (name: string) => {
       },
     },
   });
-  return users;
+  return  users;
 }
 
 // Get users by family id

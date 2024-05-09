@@ -16,8 +16,6 @@ class UserSeed extends Seeder {
   }
   createData() {
     this._data = []; // Ensure data array is initialized
-    console.log(this.family_id);
-
     range(this.count).forEach(() => {
       const firstName = faker.person.firstName();
       const lastName = faker.person.lastName();
