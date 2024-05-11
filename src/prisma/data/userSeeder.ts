@@ -6,12 +6,10 @@ import Seeder from "./Seeder";
 const uniqueEnforcerEmail = new UniqueEnforcer(); // Ensures unique emails
 
 class UserSeed extends Seeder {
-  family_id: number| null;
 
-  constructor(count = 10, familyId = null) {
+  constructor(count = 10) {
     super(count);
     this.count = count;
-    this.family_id = familyId;
     this.createData();
   }
   createData() {

@@ -18,16 +18,10 @@ class FamilySeed extends Seeder {
       const familyName = uniqueEnforcerFamily.enforce(() => {
         return faker.person.lastName(); // Generate a fake last name
       });
-      const numberOfUsers = Math.floor(Math.random() * 10) + 1;
-      const users = new UserSeed(numberOfUsers);
-
 
       this._data.push({
         name: familyName,
         code: faker.string.alphanumeric(8),
-        User: {
-          create: users,
-        }
       });
     });
   }

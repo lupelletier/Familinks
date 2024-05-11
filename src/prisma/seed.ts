@@ -3,76 +3,98 @@ import UserSeed from "./data/userSeeder";
 import FamilySeed from "./data/familySeeder";
 import QuestionSeed from "./data/questionSeeder";
 import ResponseSeed from "./data/responseSeeder";
+import {getUsersByFamilyId} from "~/utils/db";
 import {faker} from "@faker-js/faker";
-import {getUsersByFamilyId, getUsersByFamilyName} from "~/utils/db";
 
 const prisma = new PrismaClient();
-const printArray = (array: any[]) => { for (const element of array) { if (element instanceof Array) { printArray(element); } else { console.log(element); } } }
 
 const main = async () => {
   try {
-    console.log('Removing previous data...')
+    // Clear existing data
+    console.log("Removing previous data...");
     await prisma.user.deleteMany();
     await prisma.family.deleteMany();
     await prisma.question.deleteMany();
     await prisma.response.deleteMany();
+    console.log("Previous data removed.");
+    // Seed families
+    const familySeed = new FamilySeed(4);
 
-    console.log('Previous data removed.')
-
-    const families = new FamilySeed(4);
-
-    const questions = new QuestionSeed(2);
-
-    for (const family of families.data) {
+    // Loop through families to seed users and create families and users
+    for (const family of familySeed.data) {
+      // Number of users to create (3 to 6)
       const numberOfUsers = Math.floor(Math.random() * 4) + 3;
-      console.log("Seeding new family: '" + family.name + "' with " + numberOfUsers + " users")
-      const users = new UserSeed(numberOfUsers, family.id_family);
+      console.log(`Seeding new family: '${family.name}' with ${numberOfUsers} users`);
+      // Seed users for concerned family
+      const userSeed = new UserSeed(numberOfUsers);
+      // Creation of families an users
       await prisma.family.create({
         data: {
           ...(family as any),
+          // Create associated users
           User: {
-            create: users.data,
+            create: userSeed.data,
           },
         },
       });
     }
+    console.log("Database has been seeded with families and users. 🚀");
 
-    for (const question of questions.data) {
-      const responses = new ResponseSeed(1, families.data);
-      console.log(question);
+    // Seed questions
+    const questionSeed = new QuestionSeed(4);
+    console.log(questionSeed);
+
+    // Create questions
+    for (const question of questionSeed.data) {
       await prisma.question.create({
         data: {
           ...(question as any),
-          Response: {
-            create: responses.data
-          }
-        },
-      });
-
-       /* await prisma.question.update({
-          where: {
-            id_question: question.id_question
-          },
-          data: {
-            ...(question as any),
-            Response: {
-              connect: response.data,
-            },
-          }*/
+        }
+      })
     }
-    console.log(`Database has been seeded. 🚀`);
-  } catch (e) {
-    throw e;
-  }
-}
 
-console.log(`Database seeding starting...`);
-await main()
-  .then(async () => {
+    // Get all questions
+    const allQuestions = await prisma.question.findMany();
+    console.log("All questions:", allQuestions);
+
+    // Loop trough questions to create associated answers
+    for (const question of allQuestions) {
+      // Get all families
+      const allFamilies = await prisma.family.findMany()
+      console.log("All families:", allFamilies);
+      // Loop trough families
+      for (const family of allFamilies ) {
+        // Get users in the family
+        const familyUsers = await getUsersByFamilyId(family.familyId);
+        console.log("Family users:", familyUsers);
+        // Choose number of user to answer the question in the family
+        const percentageOfAnswer = 0.5;
+        const nbAnsweringUsers =  Math.ceil( percentageOfAnswer * familyUsers.length);
+        // Randomly select the nb of users
+        const answeringUsersIds = faker.helpers.arrayElements(familyUsers, nbAnsweringUsers);
+        console.log("Answering users:", answeringUsersIds);
+        const responseSeed = new ResponseSeed(nbAnsweringUsers, answeringUsersIds, question.questionId)
+        // Create the responses
+        for (const response of responseSeed.data) {
+          console.log("Response", response);
+          await prisma.response.create({
+            data: {
+              ...(response as any),
+            }
+          })
+        }
+      }
+    }
+    console.log("Database has been seeded with questions and responses. 🚀");
+  } catch (e) {
+    // Handle errors
+    console.error("Error during seeding:", e);
+  } finally {
+    // Ensure Prisma client is disconnected
     await prisma.$disconnect();
-  })
-  .catch(async (e) => {
-    console.error(e);
-    await prisma.$disconnect();
-    process.exit(1);
-  });
+  }
+};
+
+console.log("Database seeding starting...");
+// Execute the seeding script
+await main();

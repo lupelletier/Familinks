@@ -1,9 +1,9 @@
 import { faker } from "@faker-js/faker";
 import range from "lodash/range";
-import Seeder from "./Seeder"; // Assuming you have a base Seeder class
+import Seeder from "./Seeder";
 
 class QuestionSeed extends Seeder {
-    constructor(count = 10) { // Default count is 10
+    constructor(count = 10) {
         super(count);
         this.createData();
     }
@@ -11,9 +11,9 @@ class QuestionSeed extends Seeder {
     createData() {
         this._data = [];
         range(this.count).forEach(() => {
-            const question = faker.lorem.sentence(); // Generate a fake question
+            const question = faker.lorem.sentence();
             this._data.push({
-                question,
+                question: question,
             });
         });
     }
