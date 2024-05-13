@@ -1,4 +1,4 @@
-import { Elysia } from 'elysia';
+import { Elysia, t } from 'elysia';
 
 import { swagger } from "@elysiajs/swagger";
 
@@ -10,10 +10,9 @@ import MyButton from '~/views/components/sleep-button';
 import FamiliesTable from '~/views/components/families-table';
 import UsersTable from '~/views/components/users-table';
 
-import { getAllFamilies, getUsersByFamilyName } from '~/utils/db'
+import {getAllFamilies, getUsersByFamilyId, getUsersByFamilyName} from '~/utils/db'
 
-
-export const apiV1Router = new Elysia().group('/api/v1', app =>
+export const apiRouter = new Elysia().group('/api', app =>
   app
     .onError(({ code, error }) => {
       logger.error(error);
@@ -23,11 +22,11 @@ export const apiV1Router = new Elysia().group('/api/v1', app =>
         message: error.message,
       };
     })
-    .use(swagger({
+/*    .use(swagger({
       version: '0.0.1',
       path: '/swagger',
     })
-    )
+    )*/
     .post(
       '/sleep/:duration',
       async ({ params: { duration } }) => {
@@ -49,12 +48,12 @@ export const apiV1Router = new Elysia().group('/api/v1', app =>
         )
       }
     )
-    .get(
-      '/families/:name/users',
-      async ({ params: { name } }) => {
-        return (
-          <UsersTable users={await getUsersByFamilyName(name)} />
-        )
-      }
-    )
+    .get('/families/:id/users',
+        async({ params }) =>
+            {
+                params: t.Object({
+                id: t.Numeric()
+            })
+            return <UsersTable users={await getUsersByFamilyId(Number(params.id))} />
+  })
 );

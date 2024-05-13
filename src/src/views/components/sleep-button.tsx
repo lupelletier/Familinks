@@ -1,7 +1,7 @@
 export default function SearchBar(props: { value: string }) {
   return (
     <button
-      hx-post={"/api/v1/sleep/" + props.value}
+      hx-post={"/api/sleep/" + props.value}
       hx-indicator="#loading-indicator"
       hw-swap="afterbegin"
       type="submit"

@@ -34,8 +34,8 @@ export const getUsersByFamilyName = async (name: string) => {
   });
 }
 
-// Get users by family id
-export const getUsersByFamilyId = async (id: number) => {
+// Get users id by family id (for seeding)
+export const getUsersIdsByFamilyId = async (id: number) => {
    const getUsers = await prisma.user.findMany({
     where: {
       family: {
@@ -49,6 +49,17 @@ export const getUsersByFamilyId = async (id: number) => {
        users.push(user.userId);
     });
   return users;
+}
+
+// Get users id by family id
+export const getUsersByFamilyId = async (id: number) => {
+    return await prisma.user.findMany({
+        where: {
+            family: {
+                familyId: id,
+            }
+        }
+    })
 }
 
 // Get Family by user id
@@ -68,5 +79,5 @@ export const getUsersCount = async () => {
 
 // Get all families
 export const getAllFamilies = async () => {
-  await prisma.family.findMany();
+    return prisma.family.findMany();
 }

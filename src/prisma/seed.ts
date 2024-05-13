@@ -3,7 +3,7 @@ import UserSeed from "./data/userSeeder";
 import FamilySeed from "./data/familySeeder";
 import QuestionSeed from "./data/questionSeeder";
 import ResponseSeed from "./data/responseSeeder";
-import {getUsersByFamilyId} from "~/utils/db";
+import {getUsersIdsByFamilyId} from "~/utils/db";
 import {faker} from "@faker-js/faker";
 
 const prisma = new PrismaClient();
@@ -65,7 +65,7 @@ const main = async () => {
       // Loop trough families
       for (const family of allFamilies ) {
         // Get users in the family
-        const familyUsers = await getUsersByFamilyId(family.familyId);
+        const familyUsers = await getUsersIdsByFamilyId(family.familyId);
         console.log("Family users:", familyUsers);
         // Choose number of user to answer the question in the family
         const percentageOfAnswer = 0.5;

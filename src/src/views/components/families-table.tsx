@@ -17,7 +17,7 @@ export default function FamilesTable(props: { families }) {
         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Family Name</th>
       </tr>
       {props.families.map(family => {
-        family.button = <HxButton method="get" url={`/api/v1/families/${family.name}/users`} target='#users' display={`${family.name} members`} />;
+        family.button = <HxButton method="get" url={`/api/families/${family.familyId}/users`} target='#users' display={`${family.name} members`} />;
         return (
           < TableRow family={family} />
         );

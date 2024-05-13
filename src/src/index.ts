@@ -2,9 +2,7 @@ import { Elysia } from 'elysia';
 import { html } from '@elysiajs/html';
 import { staticPlugin } from '@elysiajs/static';
 import { logger } from './utils/logger';
-
-import { apiV1Router } from './routes/api-v1';
-import { pageRouter } from './routes/page';
+import {mainRouter} from "~/routes/main";
 
 export const app = new Elysia()
   .use(html())
@@ -21,5 +19,4 @@ export const app = new Elysia()
       `${request.method} ${request.url} - ${request.headers.get('user-agent')}`
     );
   })
-  .use(pageRouter)
-  .use(apiV1Router);
+  .use(mainRouter);

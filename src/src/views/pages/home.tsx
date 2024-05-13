@@ -15,7 +15,7 @@ export default function Experimental() {
         </div>
         <div >
           <MyButton value="2" />
-          <HxButton method="get" url="/api/v1/families" target='#families' display="Get Families" />
+          <HxButton method="get" url="/api/families" target='#families' display="Get Families" />
         </div>
         <div id="users"></div>
         <div id="families"></div>
