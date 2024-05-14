@@ -1,4 +1,4 @@
-# azd-bun-htmx-starter
+# familinks azd bun htmx app stater
 
 ### How to run
 ```bash
