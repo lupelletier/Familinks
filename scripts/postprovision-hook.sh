@@ -33,7 +33,7 @@ else
 fi
 if [ $APP_DB_READY = "false" ]; then
 	cd ./src
-	# run database migrations
+	# run database migrations_old
 	bunx prisma migrate deploy
 	# run seeding script
 	bunx prisma db seed

@@ -19,7 +19,7 @@ azd up
 . ./.env
 az containerapp exec --name $SERVICE_BUN_NAME --resource-group $AZURE_RESOURCE_GROUP_NAME
 
-# run database migrations
+# run database migrations_old
 bunx prisma migrate deploy
 
 # run seeding script

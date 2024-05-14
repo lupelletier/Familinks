@@ -8,6 +8,8 @@ import MainLayout from '~/views/layouts/main';
 import Experimental from '~/views/pages/home';
 
 import ErrorMessage from '~/views/components/error-message';
+import Home from "~/views/pages/home";
+import {staticPlugin} from "@elysiajs/static";
 
 export const pageRouter = new Elysia()
   .onError(({ error, set }) => {
@@ -21,7 +23,7 @@ export const pageRouter = new Elysia()
 
     return (
       <MainLayout>
-        <Experimental />
+        <Home/>
       </MainLayout>
     )
-  });
+  })

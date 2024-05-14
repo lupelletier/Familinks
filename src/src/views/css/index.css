@@ -7,7 +7,13 @@ html {
   font-weight: normal;
   font-style: normal;
 }
-
+body {
+  --white: #F8F5FB;
+  --lila: #F3DCFF;
+  --purple: #361063;
+  --dark-purple: #100028;
+  --green: #B2D5CE;
+}
 .htmx-indicator {
   transition: opacity 100ms ease-in !important;
 }
@@ -24,4 +30,28 @@ html {
   100% {
     left: 100%;
   }
+}
+
+.font-color-dark {
+  color: var(--dark-purple);
+}
+
+.font-color-light {
+  color: var(--white);
+}
+
+.bg-green {
+  background-color: var(--green);
+}
+
+.bg-lila {
+  background-color: var(--lila);
+}
+
+.bg-purple {
+  background-color: var(--purple);
+}
+
+.bg-light {
+  background-color: var(--white);
 }

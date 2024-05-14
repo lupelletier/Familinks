@@ -1,28 +1,27 @@
 import { faker } from "@faker-js/faker";
 import range from "lodash/range";
-
-import { EnforceUniqueError, UniqueEnforcer } from 'enforce-unique';
+import { UniqueEnforcer } from 'enforce-unique'; // Ensures uniqueness of names
 import Seeder from "./Seeder";
+import UserSeed from "./userSeeder"; // Base class for seeding data
 
-const uniqueEnforcerFamily = new UniqueEnforcer();
+const uniqueEnforcerFamily = new UniqueEnforcer(); // Ensures family names are unique
 
 class FamilySeed extends Seeder {
-  constructor(count: number = 10) {
-    // limit number to 20 as only 30 unique colors are available in faker.color.human()
-    if (count > 20) {
-      count = 20;
-    };
-    super(count);
-    this.count = count;
-    this.createData();
+  constructor(count = 10) { // Default count is 10
+    super(count); // Call parent constructor
+    this.createData(); // Generate the data
   }
 
   createData() {
+    this._data = []; // Clear existing data
     range(this.count).forEach(() => {
+      const familyName = uniqueEnforcerFamily.enforce(() => {
+        return faker.person.lastName(); // Generate a fake last name
+      });
+
       this._data.push({
-        name: uniqueEnforcerFamily.enforce(() => {
-          return faker.color.human();
-        })
+        name: familyName,
+        code: faker.string.alphanumeric(8),
       });
     });
   }
