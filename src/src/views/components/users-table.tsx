@@ -1,8 +1,9 @@
 import HxButton from './hx-buttton';
-const TableRow = (props: { user }) => {
+import {User} from "@prisma/client";
+const TableRow = (props: { user: User }) => {
   return (
     <tr>
-      <td>{props.user.id}</td>
+      <td>{props.user.userId}</td>
       <td>{props.user.firstname}</td>
       <td>{props.user.lastname}</td>
       <td>{props.user.email}</td>
@@ -10,7 +11,7 @@ const TableRow = (props: { user }) => {
   );
 }
 
-export default function UsersTable(props: { users }) {
+export default function UsersTable(props: { users: User[] }) {
   return (
     <table class="min-w-full divide-y divide-gray-200">
       <tr class="bg-gray-50">

@@ -1,10 +1,9 @@
 import LoadingIndicator from '../components/loading-indicator';
 import MyButton from '../components/sleep-button';
 import HxButton from '../components/hx-buttton';
-import '../css/index.css';
 import SleepButton from "../components/sleep-button";
 
-export default function Experimental() {
+export default function Home() {
     return (
         <div class="flex flex-col overflow-y-auto md:h-screen">
             <LoadingIndicator />
