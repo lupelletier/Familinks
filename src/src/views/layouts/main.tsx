@@ -1,7 +1,6 @@
 import Header from "~/views/components/header/header";
-import React from "react";
 
-export default function MainLayout(props: { children: any }): JSX.Element {
+export default function MainLayout(props: { children: any }): any {
   return (
     <html>
     <head>
@@ -30,7 +29,6 @@ export default function MainLayout(props: { children: any }): JSX.Element {
     </head>
 
     <body class="bg-white font-color-dark">
-        <Header/>
         <div id="main">
           {props.children}
         </div>

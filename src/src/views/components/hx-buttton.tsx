@@ -1,4 +1,4 @@
-export default function HxButtton(props: { method: string, url: string, target: string, display: string, bgColor: string, fontColor?: string}) {
+export default function HxButtton(props: { method: string, url: string, target: string, display: string, bgColor: string, fontColor?: string}): any{
   return (
     <button
       {...{ ['hx-' + props.method]: `${props.url}` }}

@@ -1,4 +1,4 @@
-export default function LoadingIndicator() {
+export default function LoadingIndicator(): any{
   return (
     <div
       id="loading-indicator"

@@ -1,4 +1,4 @@
-export default function SleepButton(props: { value: string }) {
+export default function SleepButton(props: { value: string }): any {
   return (
     <button
       hx-post={"/api/sleep/" + props.value}
