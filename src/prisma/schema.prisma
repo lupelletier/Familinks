@@ -1,3 +1,9 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
 generator client {
   provider = "prisma-client-js"
 }
@@ -10,25 +16,26 @@ datasource db {
 model Family {
   familyId  Int       @id @default(autoincrement())
   name      String
-  code      String?
+  code      String    @unique
   createdAt DateTime  @default(now())
   updatedAt DateTime? @updatedAt
   User      User[]
 }
 
 model User {
-  userId    Int        @id @default(autoincrement())
-  username  String
-  firstname String
-  lastname  String
-  email     String     @unique
-  password_hash String
-  phone     String?
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
-  familyId  Int
-  Response  Response[]
-  family    Family     @relation(fields: [familyId], references: [familyId])
+  userId       Int        @id @default(autoincrement())
+  username     String     @unique
+  firstname    String
+  lastname     String
+  email        String     @unique
+  hashPassword String
+  saltPassword String
+  phone        String?
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  familyId     Int
+  Response     Response[]
+  family       Family     @relation(fields: [familyId], references: [familyId])
 }
 
 model Question {
@@ -48,12 +55,4 @@ model Response {
   updatedAt  DateTime @updatedAt
   question   Question @relation(fields: [questionId], references: [questionId])
   user       User     @relation(fields: [userId], references: [userId])
-}
-
-model UserSession {
-  id          String    @id
-  expiresAt   DateTime
-  userId      String
-
-  user        User  @relation(fields: [userId], references: [id])
 }

@@ -10,6 +10,7 @@ import Experimental from '~/views/pages/home';
 import ErrorMessage from '~/views/components/error-message';
 import Home from "~/views/pages/home";
 import {staticPlugin} from "@elysiajs/static";
+import {Html} from "@elysiajs/html";
 
 export const pageRouter = new Elysia()
   .onError(({ error, set }) => {

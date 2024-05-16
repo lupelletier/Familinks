@@ -1,2 +1,2 @@
 // Add constants here
-export const EXAMPLE_CONSTANT = 12345;
+export const DEFAULT_TIMEOUT = 12345;

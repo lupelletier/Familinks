@@ -44,7 +44,7 @@ export const getUsersIdsByFamilyId = async (id: number) => {
     }
   })
   console.log(getUsers);
-   const users = [];
+   const users: any = [];
     getUsers.forEach((user)=> {
        users.push(user.userId);
     });
@@ -53,7 +53,7 @@ export const getUsersIdsByFamilyId = async (id: number) => {
 
 // Get users id by family id
 export const getUsersByFamilyId = async (id: number) => {
-    return await prisma.user.findMany({
+    return prisma.user.findMany({
         where: {
             family: {
                 familyId: id,
@@ -62,22 +62,18 @@ export const getUsersByFamilyId = async (id: number) => {
     })
 }
 
-// Get Family by user id
-export const getFamilyByUserId = async (id: number) => {
-  await prisma.family.findUnique({
-    where: {
-     familyId: id,
-    }
-  })
-}
-
-// Get users count
-export const getUsersCount = async () => {
-  const users = await prisma.user.findMany();
-  return users.length;
-}
-
 // Get all families
 export const getAllFamilies = async () => {
     return prisma.family.findMany();
+}
+
+
+// Get family id by code
+export const getFamilyIdByCode = async (code: string):Promise<number> => {
+    const getFamily = await prisma.family.findUnique({
+        where: {
+            code: code,
+        }
+    })
+    return getFamily ? getFamily.familyId : 0;
 }

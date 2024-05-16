@@ -1,11 +1,10 @@
 import { Elysia } from "elysia";
 import {apiRouter} from "~/routes/api";
-import {authRouter} from "~/routes/auth";
 import {pageRouter} from "~/routes/page";
+import {authRouter} from "~/routes/auth";
 
 export const mainRouter = new Elysia()
+    mainRouter
     .use(apiRouter)
-    .use(authRouter)
     .use(pageRouter)
-
-
+    .use(authRouter(mainRouter));

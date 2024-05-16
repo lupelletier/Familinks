@@ -2,8 +2,9 @@ import LoadingIndicator from '../components/loading-indicator';
 import MyButton from '../components/sleep-button';
 import HxButton from '../components/hx-buttton';
 import SleepButton from "../components/sleep-button";
-
-export default function Home() {
+import { ReactNode } from 'react';
+import React from "react";
+export default function Home(): React.ReactElement {
     return (
         <div class="flex flex-col overflow-y-auto md:h-screen">
             <LoadingIndicator />

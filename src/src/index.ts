@@ -3,6 +3,10 @@ import { html } from '@elysiajs/html';
 import { staticPlugin } from '@elysiajs/static';
 import { logger } from './utils/logger';
 import {mainRouter} from "~/routes/main";
+import {PrismaClient} from "@prisma/client";
+
+// prisma client
+export const prisma = new PrismaClient();
 
 export const app = new Elysia()
   .use(html())

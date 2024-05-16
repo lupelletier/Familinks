@@ -1,109 +1,200 @@
-import {Elysia} from "elysia";
-import {isValidEmail} from "~/utils/auth";
-import { generateIdFromEntropySize } from "lucia";
+import { Elysia, t } from "elysia";
+import jwt from "@elysiajs/jwt";
+import {getFamilyIdByCode} from "~/utils/db";
+import {comparePassword, hashPasswordFn} from "~/utils/bcrypt";
+import {prisma} from "~/index";
+import MainLayout from "~/views/layouts/main";
+import Home from "~/views/pages/home";
+import Login from "~/views/pages/login";
 
-export const authRouter = new Elysia('/auth/', auth =>
-    auth
-    .post("/signup", async (request: Request) => {
-        const formData = await request.formData();
-        const email = formData.get("email");
-        if (!email || typeof email !== "string" || !isValidEmail(email)) {
-            return new Response("Invalid email", {
-                status: 400
-            });
-        }
-        const password = formData.get("password");
-        if (!password || typeof password !== "string" || password.length < 6) {
-            return new Response("Invalid password", {
-                status: 400
-            });
-        }
-        //TODO: add salt to hash
-        const passwordHash = await Bun.hash(password, {
-            // recommended minimum parameters
-            memoryCost: 19456,
-            timeCost: 2,
-            outputLen: 32,
-            parallelism: 1
-        });
-        const userId = generateIdFromEntropySize(10); // 16 characters long
-
-        try {
-            await db.table("user").insert({
-                id: userId,
-                email,
-                password_hash: passwordHash
-            });
-
-            const session = await lucia.createSession(userId, {});
-            const sessionCookie = lucia.createSessionCookie(session.id);
-            return new Response(null, {
-                status: 302,
-                headers: {
-                    Location: "/",
-                    "Set-Cookie": sessionCookie.serialize()
+export const authRouter = (app: Elysia) =>
+    app.group("/auth", (app) =>
+        app
+            .use(
+                jwt({
+                    name: "jwt",
+                    secret: Bun.env.JWT_SECRET!
+                })
+            )
+            .get('/signup', async () => {
+                    return (
+                        <MainLayout>
+                            <Home/>
+                        </MainLayout>
+                    )
                 }
-            });
-        } catch {
-            // db error, email taken, etc
-            return new Response("Email already used", {
-                status: 400
-            });
-        }
-    })
-    .post("/login", async (request: Request) => {
-        const formData = await request.formData();
-        const email = formData.get("email");
-        if (!email || typeof email !== "string") {
-            return new Response("Invalid email", {
-                status: 400
-            });
-        }
-        const password = formData.get("password");
-        if (!password || typeof password !== "string") {
-            return new Response(null, {
-                status: 400
-            });
-        }
+            )
+            .post(
+                "/signup",
+                async ({body, set}: any) => {
+                    const {email, firstname, lastname, password, username, familyCode} = body;
+                    // validate duplicate email address
+                    const emailExists = await prisma.user.findUnique({
+                        where: {
+                            email,
+                        },
+                        select: {
+                            userId: true,
+                        },
+                    });
+                    if (emailExists) {
+                        // Email already exists in the database
+                        set.status = 400;
+                        return {
+                            success: false,
+                            data: null,
+                            message: "Email address already in use.",
+                        };
+                    }
 
-        const user = await db.table("user").where("email", "=", email).get();
+                    // validate duplicate username
+                    const usernameExists = await prisma.user.findUnique({
+                        where: {
+                            username,
+                        },
+                        select: {
+                            userId: true,
+                        },
+                    });
+                    const familyCodeExists = await getFamilyIdByCode(familyCode);
+                    if (!familyCodeExists) {
+                        set.status = 400;
+                        return {
+                            success: false,
+                            data: null,
+                            message: "Invalid family code.",
+                        };
+                    }
 
-        if (!user) {
-            // NOTE:
-            // Returning immediately allows malicious actors to figure out valid emails from response times,
-            // allowing them to only focus on guessing passwords in brute-force attacks.
-            // As a preventive measure, you may want to hash passwords even for invalid emails.
-            // However, valid emails can be already be revealed with the signup page
-            // and a similar timing issue can likely be found in password reset implementation.
-            // It will also be much more resource intensive.
-            // Since protecting against this is non-trivial,
-            // it is crucial your implementation is protected against brute-force attacks with login throttling etc.
-            // If emails/usernames are public, you may outright tell the user that the username is invalid.
-            return new Response("Invalid email or password", {
-                status: 400
-            });
-        }
+                    if (usernameExists) {
+                        set.status = 400;
+                        return {
+                            success: false,
+                            data: null,
+                            message: "Someone already taken this username.",
+                        };
+                    }
 
-        const validPassword = await verify(user.password_hash, password, {
-            memoryCost: 19456,
-            timeCost: 2,
-            outputLen: 32,
-            parallelism: 1
-        });
-        if (!validPassword) {
-            return new Response("Invalid email or password", {
-                status: 400
-            });
-        }
+                    // handle password
+                    const {hashPassword, saltPassword} = await hashPasswordFn(password);
+                    const familyId: number = await getFamilyIdByCode(familyCode);
 
-        const session = await lucia.createSession(user.id, {});
-        const sessionCookie = lucia.createSessionCookie(session.id);
-        return new Response(null, {
-            status: 302,
-            headers: {
-                Location: "/",
-                "Set-Cookie": sessionCookie.serialize()
-            }
-        });
-    }));
+                    const newUser = await prisma.user.create({
+                        data: {
+                            firstname,
+                            lastname,
+                            email,
+                            hashPassword,
+                            saltPassword,
+                            username,
+                            familyId,
+                        },
+                    });
 
+                    return {
+                        success: true,
+                        message: "Account created",
+                        data: {
+                            user: newUser,
+                        },
+                    };
+                },
+                {
+                    body: t.Object({
+                        firstname: t.String(),
+                        lastname: t.String(),
+                        email: t.String(),
+                        username: t.String(),
+                        password: t.String(),
+                        familyCode: t.String(),
+                    }),
+                }
+            )
+            .get('/login', async () => {
+                return (
+                    <MainLayout>
+                        <Login/>
+                    </MainLayout>
+                )
+            })
+            .post(
+                "/login",
+                async ({jwt, set, cookie: {auth}, body}: any) => {
+                    const {username, password} = body;
+                    // verify email/username
+                    const user = await prisma.user.findFirst({
+                        where: {
+                            OR: [
+                                {
+                                    email: username,
+                                },
+                                {
+                                    username,
+                                },
+                            ],
+                        },
+                        select: {
+                            userId: true,
+                            hashPassword: true,
+                            saltPassword: true,
+                        },
+                    });
+
+                    if (!user) {
+                        set.status = 400;
+                        return {
+                            success: false,
+                            data: null,
+                            message: "Invalid credentials",
+                        };
+                    }
+
+                    // verify password
+                    const match = await comparePassword(password, user.saltPassword, user.hashPassword);
+                    if (!match) {
+                        set.status = 400;
+                        return {
+                            success: false,
+                            data: null,
+                            message: "Invalid credentials",
+                        };
+                    }
+
+                    // generate access
+
+                    const accessToken = await jwt.sign({
+                        userId: user.userId,
+                    });
+                    auth.set({
+                        value: accessToken,
+                        httpOnly: true,
+                        maxAge: 15 * 60, // 15 minutes
+                        path: "/",
+                    });
+                    return {
+                        success: true,
+                        data:
+                        user,
+                        message: "Account login successfully",
+                    };
+                },
+                {
+                    body: t.Object({
+                        username: t.String(),
+                        password: t.String(),
+                    }),
+                }
+            )
+            .get('/logout', async ({cookie: {auth}, set}: any) => {
+                auth.set({
+                    value: "",
+                    httpOnly: true,
+                    maxAge: 0,
+                    path: "/",
+                });
+                return {
+                    success: true,
+                    message: "Account logout successfully",
+                };
+            })
+    );
