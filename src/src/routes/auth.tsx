@@ -123,7 +123,7 @@ export const authRouter = (app: Elysia) =>
                 })
             .post(
                 "/login",
-                async ({jwt, set, cookie: {auth}, body}: any) => {
+                async ({jwt, set, cookie: {auth}, body, store}: any) => {
                     const {username, password} = body;
                     // verify email/username
                     const user = await prisma.user.findFirst({
@@ -136,11 +136,6 @@ export const authRouter = (app: Elysia) =>
                                     username,
                                 },
                             ],
-                        },
-                        select: {
-                            userId: true,
-                            hashPassword: true,
-                            saltPassword: true,
                         },
                     });
 
@@ -176,6 +171,7 @@ export const authRouter = (app: Elysia) =>
                         maxAge: 15 * 60, // 15 minutes
                         path: "/",
                     });
+                    store.user = user;
                     return {
                         success: true,
                         data: user,

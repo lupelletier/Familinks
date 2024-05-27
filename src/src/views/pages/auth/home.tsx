@@ -3,7 +3,9 @@ import HxButton from '../../components/hx-buttton';
 import SleepButton from "../../components/sleep-button";
 import Badge from "~/views/components/badge";
 import logo from "../../../../public/LOGOS-VIOLET.png";
-export default function Home(): any {
+export default function Home(props: {user: any }): any {
+    console.log('user', props.user);
+
     return (
         <div class="flex flex-col overflow-y-auto md:h-screen">
             <img alt="logo" src={logo}/>
@@ -21,7 +23,7 @@ export default function Home(): any {
             <LoadingIndicator />
             <main class="flex flex-1 flex-col items-center justify-start p-2">
                 <div class="my-7 text-center sm:my-16">
-                    <h1 class="text-3xl uppercase md:text-3xl lg:text-4xl">Experimental</h1>
+                    <h1 class="text-3xl uppercase md:text-3xl lg:text-4xl">Welcome, {}</h1>
                     <h2 class="mt-6 text-xs md:text-sm lg:text-lg">
                         This is an experimental page.
                     </h2>

@@ -11,76 +11,64 @@ import jwt from "@elysiajs/jwt";
 import Login from "~/views/pages/guest/login";
 import {authMiddleware} from "~/middlewares/middleware";
 import Home from "~/views/pages/auth/home";
+import {logger} from "~/utils/logger";
+
+
 
 export const pageRouter = new Elysia()
-/*  .onError(({ error, set }): JSX.Element => {
-    logger.error(error);
-
-    set.status = 200;
-    return <ErrorMessage />;
-  })*/
-/*  .get('/', async (): Promise<any> => {
-      return (
-          <MainLayout>
-            <Home/>
-          </MainLayout>
-      );
-  })*/
-
     .use(
         jwt({
             name: "jwt",
             secret: Bun.env.JWT_SECRET!
         })
     )
-// Route handler
-    .get('/', async ({ set, jwt, cookie: {auth} }: any) => {
-    try {
-        // The token is automatically verified and the decoded payload is available as `jwt`
-        const profile = await jwt.verify(auth.value);
-        console.log('profile', profile);
-        if (!profile) {
-            set.status = 401;
-            set.redirect = '/auth/login';
-            return;
-        }
-
-
-        // Main handler logic
-        return(
-            <MainLayout>
-                <Home/>
-            </MainLayout>
-        );
-    } catch (error) {
-        // Handle unexpected errors
-        set.status = 500;
-        return { message: 'Internal Server Error', error: error.message };
-    }
-})
-/*    .get(
-        '/',
-        {
-            beforeHandle: async ({ set, cookie: { auth } }: any) => {
-                console.log(auth.session);
-                if (!auth.value) {
-                    set.status = 401;
-                    return <ErrorMessage message={'You are not connected'} />;
-                }
-            }
-        },
-        async ({ jwt, set, cookie: { auth } }: any) => {
-            try {
-                const profile = await jwt.verify(auth.value);
-                if (!profile) {
-                    set.redirect = '/auth/login';
-                }
-            } catch (error) {
+    // get the user from the session
+    .state('user', '' )
+    // Route handler
+    .get('/', async ({ set, jwt, cookie: {auth}, store }: any) => {
+        try {
+            // The token is automatically verified and the decoded payload is available as `jwt`
+            const profile = await jwt.verify(auth.value);
+            console.log('profile', profile);
+            if (!profile) {
                 set.status = 401;
                 set.redirect = '/auth/login';
+                return;
             }
+            return(
+                <MainLayout>
+                    <Home user={store.user} />
+                </MainLayout>
+            );
+        } catch (error) {
+            // Handle unexpected errors
+            set.status = 500;
+            return { message: 'Internal Server Error', error: error.message };
         }
-    )*/
+    })
+    /*    .get(
+            '/',
+            {
+                beforeHandle: async ({ set, cookie: { auth } }: any) => {
+                    console.log(auth.session);
+                    if (!auth.value) {
+                        set.status = 401;
+                        return <ErrorMessage message={'You are not connected'} />;
+                    }
+                }
+            },
+            async ({ jwt, set, cookie: { auth } }: any) => {
+                try {
+                    const profile = await jwt.verify(auth.value);
+                    if (!profile) {
+                        set.redirect = '/auth/login';
+                    }
+                } catch (error) {
+                    set.status = 401;
+                    set.redirect = '/auth/login';
+                }
+            }
+        )*/
     .get('/tree', async (): Promise<any> => {
         return (
             <MainLayout>
@@ -102,4 +90,3 @@ export const pageRouter = new Elysia()
             </MainLayout>
         );
     })
-
