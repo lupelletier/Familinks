@@ -4,8 +4,10 @@ import {getFamilyIdByCode} from "~/utils/db";
 import {comparePassword, hashPasswordFn} from "~/utils/bcrypt";
 import {prisma} from "~/index";
 import MainLayout from "~/views/layouts/main";
-import Home from "~/views/pages/home";
-import Login from "~/views/pages/login";
+import Home from "~/views/pages/auth/home";
+import Login from "~/views/pages/guest/login";
+import React from 'react';
+import ReactDOMServer from 'react-dom/server';
 
 export const authRouter = (app: Elysia) =>
     app.group("/auth", (app) =>
@@ -13,7 +15,8 @@ export const authRouter = (app: Elysia) =>
             .use(
                 jwt({
                     name: "jwt",
-                    secret: Bun.env.JWT_SECRET!
+                    /*secret: Bun.env.JWT_SECRET!*/
+                    secret: 'jwt_secret_key'
                 })
             )
             .get('/signup', async () => {
@@ -110,13 +113,14 @@ export const authRouter = (app: Elysia) =>
                     }),
                 }
             )
-            .get('/login', async () => {
-                return (
-                    <MainLayout>
-                        <Login/>
-                    </MainLayout>
-                )
-            })
+            .get('/login',
+                async (): Promise<string> => {
+                    return (
+                        <MainLayout>
+                            <Login/>
+                        </MainLayout>
+                    )
+                })
             .post(
                 "/login",
                 async ({jwt, set, cookie: {auth}, body}: any) => {
@@ -142,11 +146,13 @@ export const authRouter = (app: Elysia) =>
 
                     if (!user) {
                         set.status = 400;
+                        console.log("Invalid credentials");
                         return {
                             success: false,
                             data: null,
                             message: "Invalid credentials",
                         };
+
                     }
 
                     // verify password
@@ -161,7 +167,6 @@ export const authRouter = (app: Elysia) =>
                     }
 
                     // generate access
-
                     const accessToken = await jwt.sign({
                         userId: user.userId,
                     });
@@ -173,8 +178,7 @@ export const authRouter = (app: Elysia) =>
                     });
                     return {
                         success: true,
-                        data:
-                        user,
+                        data: user,
                         message: "Account login successfully",
                     };
                 },

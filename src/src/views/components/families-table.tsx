@@ -1,7 +1,7 @@
 import HxButton from '../components/hx-buttton';
 import {Family} from "@prisma/client";
 import HxButtton from "../components/hx-buttton";
-const TableRow = (props: { family: Family}) => {
+const TableRow = (props: { family: Family}): JSX.Element => {
   return (
     <tr>
       <td>{props.family.familyId}</td>

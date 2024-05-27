@@ -17,6 +17,8 @@
     "@elysiajs/swagger": "^1.0.3",
     "@lucia-auth/adapter-postgresql": "^3.1.2",
     "@prisma/client": "latest",
+    "@types/react": "^18.3.2",
+    "@types/react-dom": "^18.0.0",
     "axios": "^1.5.1",
     "axios-retry": "^3.9.1",
     "bun-types": "latest",
@@ -35,7 +37,6 @@
     "@testing-library/react": "^14.2.2",
     "@types/bun": "^1.1.1",
     "@types/lodash": "^4.17.0",
-    "@types/react": "^18.3.2",
     "@types/string-similarity": "^4.0.0",
     "@typescript-eslint/eslint-plugin": "^6.7.4",
     "autoprefixer": "^10.4.17",
@@ -57,8 +58,7 @@
     "rollup-plugin-copy": "^3.5.0",
     "tailwindcss": "^3.4.1",
     "typescript": "^5.2.2",
-    "vite": "^5.0.12",
-    "bun-types": "latest"
+    "vite": "^5.0.12"
   },
   "module": "www/bin.js",
   "type": "module"

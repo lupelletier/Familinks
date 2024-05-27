@@ -39,7 +39,15 @@ body {
 .font-color-light {
   color: var(--white);
 }
-
+.font-color-green {
+  color: var(--green);
+}
+.hover-green {
+  transition: all 0.3s;
+}
+.hover-green:hover {
+  color: var(--green);
+}
 .bg-green {
   background-color: var(--green);
 }
@@ -54,4 +62,12 @@ body {
 
 .bg-light {
   background-color: var(--white);
+}
+
+.border-solid-dark {
+  border-style: solid;
+  border-color: var(--dark-purple);
+}
+.shadow-sm {
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
 }

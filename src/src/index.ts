@@ -4,12 +4,14 @@ import { staticPlugin } from '@elysiajs/static';
 import { logger } from './utils/logger';
 import {mainRouter} from "~/routes/main";
 import {PrismaClient} from "@prisma/client";
+import {deviceDetectionMiddleware} from "~/middlewares/deviceDetection";
 
 // prisma client
 export const prisma = new PrismaClient();
 
 export const app = new Elysia()
-  .use(html())
+    .use(deviceDetectionMiddleware())
+    .use(html())
   .use(
     staticPlugin({
       prefix: '',
@@ -18,9 +20,17 @@ export const app = new Elysia()
       },
     })
   )
-  .on('beforeHandle', async ({ request }) => {
-    logger.info(
-      `${request.method} ${request.url} - ${request.headers.get('user-agent')}`
-    );
-  })
+/*    .on('beforeHandle', async ({ request }) => {
+        logger.info(
+            `Handling request: ${request.method} ${request.url} - ${request.headers.get('user-agent')}`
+        );
+    })*/
+/*    .onError(({ code, error }) => {
+        return new Response(error.toString())
+    })*/
+/*    .on('afterHandle', async ({ request, response }) => {
+        logger.info(
+            `Handled request: ${request.method} ${request.url} - Status: ${response.statusCode}`
+        );
+    })*/
   .use(mainRouter);

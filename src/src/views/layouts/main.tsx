@@ -1,6 +1,7 @@
 import Header from "~/views/components/header/header";
-
-export default function MainLayout(props: { children: any }): any {
+import React from "react";
+import MainNavigation from "../components/navigation/main";
+export default function MainLayout(props: { children: React.ReactNode }): any {
   return (
     <html>
     <head>
@@ -10,6 +11,7 @@ export default function MainLayout(props: { children: any }): any {
         <meta name="theme-color" content="#000000"/>
 
         <link rel="icon" href="/violette.svg"/>
+        <script src="https://kit.fontawesome.com/52a84c43db.js" crossorigin="anonymous"/>
         <meta
             name="description"
             content="Familinks App"
@@ -29,9 +31,10 @@ export default function MainLayout(props: { children: any }): any {
     </head>
 
     <body class="bg-white font-color-dark">
-        <div id="main">
-          {props.children}
-        </div>
+    <div id="main">
+        {props.children}
+    </div>
+        <MainNavigation />
       </body>
 
       <script

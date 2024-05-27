@@ -1,5 +1,5 @@
-export default function ErrorMessage(): any {
+export default function ErrorMessage(props: { message: string }) {
   return(
-    <p class="mt-8 text-center">Something went wrong, try again later.</p>
+    <p class="mt-8 text-center">{props.message}</p>
   );
 }

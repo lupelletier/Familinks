@@ -1,9 +1,23 @@
-import LoadingIndicator from '../components/loading-indicator';
-import HxButton from '../components/hx-buttton';
-import SleepButton from "../components/sleep-button";
+import LoadingIndicator from '../../components/loading-indicator';
+import HxButton from '../../components/hx-buttton';
+import SleepButton from "../../components/sleep-button";
+import Badge from "~/views/components/badge";
+import logo from "../../../../public/LOGOS-VIOLET.png";
 export default function Home(): any {
     return (
         <div class="flex flex-col overflow-y-auto md:h-screen">
+            <img alt="logo" src={logo}/>
+            <Badge name="Home" />
+            <div style={
+{
+                    backgroundImage: "url('../../../../public/LOGOS-VIOLET.png')",
+                    backgroundSize: "cover",
+                    backgroundRepeat: "no-repeat",
+                    height: "50vh"
+                }
+            }>
+
+            </div>
             <LoadingIndicator />
             <main class="flex flex-1 flex-col items-center justify-start p-2">
                 <div class="my-7 text-center sm:my-16">
