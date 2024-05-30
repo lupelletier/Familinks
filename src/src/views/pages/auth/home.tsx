@@ -8,7 +8,7 @@ export default function Home(props: {user: any }): any {
 
     return (
         <div class="flex flex-col overflow-y-auto md:h-screen">
-            <img alt="logo" src={logo}/>
+            <img alt="logo" src='/LOGOS-VIOLET.png'/>
             <Badge name="Home" />
             <div style={
 {

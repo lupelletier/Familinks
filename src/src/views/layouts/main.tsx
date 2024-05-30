@@ -1,7 +1,6 @@
-import Header from "~/views/components/header/header";
-import React from "react";
 import MainNavigation from "../components/navigation/main";
-export default function MainLayout(props: { children: React.ReactNode }): any {
+
+export default function MainLayout(props: { children: any }): any {
   return (
     <html>
     <head>
@@ -31,11 +30,11 @@ export default function MainLayout(props: { children: React.ReactNode }): any {
     </head>
 
     <body class="bg-white font-color-dark">
-    <div id="main">
-        {props.children}
-    </div>
+        <div id="main">
+            {props.children}
+        </div>
         <MainNavigation />
-      </body>
+    </body>
 
       <script
         defer

@@ -1,6 +1,6 @@
 import { Elysia } from 'elysia';
 import {logger} from "~/utils/logger";
-import ErrorMessage from "~/views/components/error-message";
+import GuestLayout from "~/views/layouts/guest";
 
 export function deviceDetectionMiddleware() {
     return new Elysia().on('beforeHandle', async ({ request, response }) => {
@@ -10,7 +10,11 @@ export function deviceDetectionMiddleware() {
         );
         console.log('User agent:', userAgent)
         if (!isMobile(userAgent)) {
-            return <ErrorMessage message={'Only mobile devices are supported'} />
+            return (
+                <GuestLayout>
+                    <img src='/LOGOS-BLACK.png' alt='violette' />
+                </GuestLayout>
+            );
         }
     });
 }

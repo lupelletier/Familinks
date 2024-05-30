@@ -1,7 +1,6 @@
 import { Elysia } from 'elysia';
 import { html } from '@elysiajs/html';
 import { staticPlugin } from '@elysiajs/static';
-import { logger } from './utils/logger';
 import {mainRouter} from "~/routes/main";
 import {PrismaClient} from "@prisma/client";
 import {deviceDetectionMiddleware} from "~/middlewares/deviceDetection";
@@ -12,14 +11,14 @@ export const prisma = new PrismaClient();
 export const app = new Elysia()
     .use(deviceDetectionMiddleware())
     .use(html())
-  .use(
+    .use(
     staticPlugin({
       prefix: '',
       headers: {
         'Cache-Control': 'public, max-age=86400',
       },
     })
-  )
+    )
 /*    .on('beforeHandle', async ({ request }) => {
         logger.info(
             `Handling request: ${request.method} ${request.url} - ${request.headers.get('user-agent')}`
@@ -33,4 +32,4 @@ export const app = new Elysia()
             `Handled request: ${request.method} ${request.url} - Status: ${response.statusCode}`
         );
     })*/
-  .use(mainRouter);
+    .use(mainRouter);
