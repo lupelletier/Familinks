@@ -4,10 +4,10 @@ import {getFamilyIdByCode} from "~/utils/db";
 import {comparePassword, hashPasswordFn} from "~/utils/bcrypt";
 import {prisma} from "~/index";
 import MainLayout from "~/views/layouts/main";
-import Home from "~/views/pages/auth/home";
 import Login from "~/views/pages/guest/login";
-import React from 'react';
-import ReactDOMServer from 'react-dom/server';
+import HomeGuest from "~/views/pages/guest/home";
+import GuestLayout from "~/views/layouts/guest";
+import HomeGuestComponent from "~/views/components/home-guest/home-guest";
 
 export const authRouter = (app: Elysia) =>
     app.group("/auth", (app) =>
@@ -22,7 +22,7 @@ export const authRouter = (app: Elysia) =>
             .get('/signup', async () => {
                     return (
                         <MainLayout>
-                            <Home/>
+                            <SignUp/>
                         </MainLayout>
                     )
                 }
@@ -113,12 +113,19 @@ export const authRouter = (app: Elysia) =>
                     }),
                 }
             )
+            .get('/home', async (): Promise<any> => {
+                return (
+                    <GuestLayout>
+                        <HomeGuest/>
+                    </GuestLayout>
+                )
+            })
             .get('/login',
                 async (): Promise<string> => {
                     return (
-                        <MainLayout>
+                        <GuestLayout>
                             <Login/>
-                        </MainLayout>
+                        </GuestLayout>
                     )
                 })
             .post(

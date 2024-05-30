@@ -1,4 +1,5 @@
 import MainNavigation from "../components/navigation/main";
+import LoadingIndicator from "~/views/components/loading-indicator";
 
 export default function MainLayout(props: { children: any }): any {
   return (
@@ -30,6 +31,7 @@ export default function MainLayout(props: { children: any }): any {
     </head>
 
     <body class="bg-white font-color-dark">
+        <LoadingIndicator />
         <div id="main">
             {props.children}
         </div>

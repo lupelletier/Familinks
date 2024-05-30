@@ -1,6 +1,6 @@
 import { Elysia, t } from 'elysia';
 
-import { swagger } from "@elysiajs/swagger";
+// TODO : import { swagger } from "@elysiajs/swagger";
 
 import { logger } from '~/utils/logger';
 
@@ -22,7 +22,8 @@ export const apiRouter = new Elysia().group('/api', app =>
         message: error.message,
       };
     })
-/*    .use(swagger({
+      /* TODO:
+      .use(swagger({
       version: '0.0.1',
       path: '/swagger',
     })
@@ -51,7 +52,7 @@ export const apiRouter = new Elysia().group('/api', app =>
     .get('/families/:id/users',
         async({ params }) =>
             {
-                params: t.Object({
+                t.Object({
                 id: t.Numeric()
             })
             return <UsersTable users={await getUsersByFamilyId(Number(params.id))} />

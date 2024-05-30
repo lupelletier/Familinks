@@ -1,7 +1,7 @@
-import HxLink from "~/views/components/hx-link";
 import HxButton from "~/views/components/hx-buttton";
+import HxLink from "~/views/components/hx-link";
 
-export default function HomeGuest(): any {
+export default function HomeGuestComponent(): any {
     return (
         <div id="home-guest" class="h-screen flex flex-col justify-between items-center">
             <div class="flex flex-col items-center justify-center flex-grow">
@@ -14,5 +14,5 @@ export default function HomeGuest(): any {
             </div>
             <img src="/violette_bonjour.png" alt="Violette Bonjour" class="fixed bottom-0 w-fit"/>
         </div>
-    );
+    )
 }

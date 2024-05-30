@@ -12,7 +12,13 @@ export function deviceDetectionMiddleware() {
         if (!isMobile(userAgent)) {
             return (
                 <GuestLayout>
-                    <img src='/LOGOS-BLACK.png' alt='violette' />
+                    <h1 class="text-3xl font-bold text-red-600 mb-4">Oups !</h1>
+                    <p class="text-lg text-gray-700 mb-6">Notre application n'est actuellement pas disponible sur
+                        ordinateur.</p>
+                    <p class="text-lg text-gray-700">Veuillez essayer d'y accéder depuis votre appareil mobile.</p>
+                    <p class="text-sm text-gray-500 mt-2">Nous espérons vous y voir !</p>
+                    <div class="mt-6">
+                    </div>
                 </GuestLayout>
             );
         }

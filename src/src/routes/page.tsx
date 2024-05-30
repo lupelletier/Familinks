@@ -32,7 +32,7 @@ export const pageRouter = new Elysia()
             console.log('profile', profile);
             if (!profile) {
                 set.status = 401;
-                set.redirect = '/auth/login';
+                set.redirect = '/auth/home';
                 return;
             }
             return(

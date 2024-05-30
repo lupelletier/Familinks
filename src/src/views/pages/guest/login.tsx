@@ -1,31 +1,25 @@
 import LoginForm from "~/views/components/authentication/login-form";
-import {useState} from "react";
-import HxButton from "~/views/components/hx-buttton";
 import LoadingIndicator from "~/views/components/loading-indicator";
+import HxBackLink from "~/views/components/hx-back-link";
 
 export default function Login(): any {
     return (
-        <div class="bg-light flex items-center justify-center h-screen">
+        <div class="h-screen w-full ">
             <LoadingIndicator />
-
-            <div class=" rounded px-8 pt-6 pb-8 mb-4 w-full sm:w-1/3">
-                <h2 class="text-2xl font-bold mb-4">Login</h2>
-                <form id="login-form" class="space-y-4" action="/auth/login" method="POST">
-                    <div>
-                        <label for="username" class="block text-gray-700 font-normal mb-2">Nom d'utilisateur</label>
-                        <input id="username" name="username" type="text" placeholder="Username" required
-                               class="appearance-none border rounded-md border-solid-dark w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"/>
-                    </div>
-                    <div>
-                        <label for="password" class="block text-gray-700 font-normal mb-2">Mot de passe</label>
-                        <input id="password" name="password" type="password" placeholder="Password" required
-                               class="appearance-none border rounded-md border-solid-dark w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"/>
-                    </div>
-                    <HxButton method="post" url="/auth/login" target='#login' display="Je me connecte" bgColor="bg-purple"/>
-                    <div id="login"></div>
-                </form>
+            <div class={'w-full flex justify-center items-center'}>
+                <img src="/LOGOS-VIOLET.png" alt="logo purple" class="w-1/2 fixed top-0 mt-4" />
             </div>
-
+            <div class="mt-24 mx-5 flex flex-col justify-center items-center">
+                <HxBackLink method="get" url="/auth/home" target="#home-guest" swap="innerHTML"/>
+                <div class="bg-light w-full mt-4">
+                    <LoginForm/>
+                </div>
+                <div
+                    class="w-full py-3 flex items-center text-sm font-color-dark before:flex-1 before:border-t before:me-6 after:flex-1 after:border-t after:ms-6 before:border-neutral-600 after:border-neutral-600">
+                    ou
+                </div>
+                <img src="/violette_bonjour.png" alt="Violette Bonjour" class="fixed bottom-0 right-5 w-fit"/>
+            </div>
         </div>
-    )
+    );
 }

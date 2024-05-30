@@ -1,49 +1,29 @@
-import React from "react";
+import HxButton from "~/views/components/hx-buttton";
+import HxLink from "~/views/components/hx-link";
 
-export default function LoginForm({ username, password, onUsernameChange, onPasswordChange, onSubmit }) {
+export default function LoginForm(): any{
     return (
-        <form className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-            <div className="mb-4">
-                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="username">
-                    Username
-                </label>
-                <input
-                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    id="username"
-                    type="text"
-                    placeholder="Username"
-                    value={username}
-                    onChange={onUsernameChange}
-                />
+        <form id="login-form" class="w-full" action="/auth/login" method="POST">
+            <div class={'space-y-4'}>
+
+                <div>
+                    <label for="username" class="block text-gray-700 font-normal mb-2">Nom d'utilisateur</label>
+                    <input id="username" name="username" type="text" placeholder="Username" required
+                           class="appearance-none border rounded-md border-solid-dark w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"/>
+                </div>
+                <div>
+                    <label for="password" class="block text-gray-700 font-normal mb-2">Mot de passe</label>
+                    <input id="password" name="password" type="password" placeholder="Password" required
+                           class="appearance-none border rounded-md border-solid-dark w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"/>
+                    <div class=" underline text-xs absolute right-1">
+                        <HxLink url="/auth/forgot-password" display="Mot de passe oublié ?" />
+                    </div>
+                </div>
             </div>
-            <div className="mb-6">
-                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password">
-                    Password
-                </label>
-                <input
-                    className="shadow appearance-none border border-red rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-                    id="password"
-                    type="password"
-                    placeholder="******************"
-                    value={password}
-                    onChange={onPasswordChange}
-                />
+            <div class="flex justify-center items-center mt-10">
+                <HxButton method="post" url="/auth/login" target='#login' display="Je me connecte" bgColor="bg-purple"/>
             </div>
-            <div className="flex items-center justify-between">
-                <button
-                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                    type="button"
-                    onClick={onSubmit}
-                >
-                    Sign In
-                </button>
-                <a
-                    className="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800"
-                    href="#"
-                >
-                    Forgot Password?
-                </a>
-            </div>
+            <div id="login"></div>
         </form>
     );
 }
