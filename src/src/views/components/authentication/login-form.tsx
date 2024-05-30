@@ -5,7 +5,6 @@ export default function LoginForm(): any{
     return (
         <form id="login-form" class="w-full" action="/auth/login" method="POST">
             <div class={'space-y-4'}>
-
                 <div>
                     <label for="username" class="block text-gray-700 font-normal mb-2">Nom d'utilisateur</label>
                     <input id="username" name="username" type="text" placeholder="Username" required

@@ -1,8 +1,14 @@
-export default function HxLink(props: { display: string, url: string }): any {
+export default function HxBackLink(props: { method: string, url: string, target: string, swap: string, display: string}): any{
     return (
-        <a hx-get={props.url} hx-push-url="true"
-           class="flex justify-center items-center block w-full py-2 px-4 font-color-dark hover-green">
-            {props.display}
+        <a
+            {...{['hx-' + props.method]: `${props.url}`}}
+            hx-target={props.target}
+            hx-indicator="#loading-indicator"
+            hx-swap={props.swap}
+            type="submit"
+            class={'w-full mb-10 py-2 font-color-dark hover-green underline'}
+        >
+            <p>{props.display}</p>
         </a>
     );
 }

@@ -7,7 +7,7 @@ import MainLayout from "~/views/layouts/main";
 import Login from "~/views/pages/guest/login";
 import HomeGuest from "~/views/pages/guest/home";
 import GuestLayout from "~/views/layouts/guest";
-import HomeGuestComponent from "~/views/components/home-guest/home-guest";
+import SignUp from "~/views/pages/guest/signup";
 
 export const authRouter = (app: Elysia) =>
     app.group("/auth", (app) =>
@@ -21,9 +21,9 @@ export const authRouter = (app: Elysia) =>
             )
             .get('/signup', async () => {
                     return (
-                        <MainLayout>
+                        <GuestLayout>
                             <SignUp/>
-                        </MainLayout>
+                        </GuestLayout>
                     )
                 }
             )

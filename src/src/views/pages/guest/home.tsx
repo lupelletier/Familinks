@@ -8,8 +8,8 @@ export default function HomeGuest(): any {
                 <img src="/LOGOS-VIOLET.png" alt="logo purple" class="mb-8"/>
                 <HxButton method="get" display="Je me connecte" url="/auth/login" target="#home-guest" swap="innerHTML"
                           bgColor="bg-purple"/>
-                <div id="signup" class="mt-4">
-                    <HxLink url="/auth/signup" display="Créer"/>
+                <div id="signup" class="mt-4 underline">
+                    <HxLink method="get" target="#home-guest" swap="innerHTML" url="/auth/signup" display="Je m'inscris"/>
                 </div>
             </div>
             <img src="/violette_bonjour.png" alt="Violette Bonjour" class="fixed bottom-0 w-fit"/>
