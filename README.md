@@ -1,29 +1,18 @@
-# familinks azd bun htmx app stater
+# Familinks
 
-### How to run
-```bash
+### Concept 
 
-# deploy the application
-azd up
+Vous est-il déjà arrivé de vous sentir éloigné de votre famille ?
 
-```
-*Remarks:*
-- DB migrations and seeding will be run automatically on deployment with a postprovision script. Migrations will be run from the local developpment environment, therefore the db firewall must be configured to allow the local public ip address (automatically done when the value of azd env variable AZURE_ENVIRONMENT is not "prod")
-- Once migrations are run, var APP_DB_READY will be set to true and the application will be started
-- to remove all azure resoueces, run `azd down --purge`
+Nous, oui. 
 
+Tous les quatre étudiants, nous nous sommes un jour retrouvés autour de la problématique de la communication intra-familiale. Nous sommes géographiquement éloignés de nos familles et nos contacts tendent à être de plus en plus formels, de moins en moins intimes.
 
-### Manual Database initialization
-```bash
-# Connect to a running container instance
-. ./.env
-az containerapp exec --name $SERVICE_BUN_NAME --resource-group $AZURE_RESOURCE_GROUP_NAME
+Quelle est la solution ? Dans l’ère du digital, elle nous a semblé évidente.
 
-# run database migrations_old
-bunx prisma migrate deploy
+familinks est une application conçue pour toute la famille. Elle repose sur un concept simple : chaque jour, une question commune pour tous les membres de la famille. Pour avoir accès aux réponses des uns et des autres, il vous suffit de répondre.
 
-# run seeding script
-bunx prisma db seed
+Le but est de renouer un contact plus léger avec sa famille avec des questions accessibles, drôles et la possibilité d'interagir avec les réponses. Quel est le plat préféré de votre père ? Quel est le pire cadeau d’anniversaire que votre demi-frère ait jamais reçu ? Likez et commentez les réponses pour créer de nouvelles conversations ! Avec familinks, vous pouvez créer une habitude qui resserre les liens avec vos proches. 
 
-```
+### PoC: 
 
