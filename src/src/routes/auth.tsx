@@ -7,17 +7,12 @@ import HomeGuest from "~/views/pages/guest/home";
 import GuestLayout from "~/views/layouts/guest";
 import SignUp from "~/views/pages/guest/signup";
 import {prisma} from "~/index";
+import JoinFamily from "~/views/pages/guest/joinFamily";
+import Family from "~/views/pages/guest/family";
 
 export const authRouter = (app: Elysia) =>
     app.group("/auth", (app) =>
         app
-            .use(
-                jwt({
-                    name: "jwt",
-                    /*secret: Bun.env.JWT_SECRET!*/
-                    secret: 'jwt_secret_key'
-                })
-            )
             .get('/signup', async () => {
                     return (
                         <GuestLayout>
@@ -194,6 +189,76 @@ export const authRouter = (app: Elysia) =>
                     }),
                 }
             )
+            .get('/family', async ({store, set, jwt, cookie: {auth},}: any): Promise<any> => {
+                console.log("user", store.user)
+                // The token is automatically verified and the decoded payload is available as `jwt`
+                const profile = jwt.verify(auth.value);
+                console.log('profile', profile);
+                if (!profile) {
+                    set.status = 401;
+                    set.redirect = '/auth/login';
+                    return;
+                }
+                return (
+                    <GuestLayout>
+                        <Family user={store.user} />
+                    </GuestLayout>
+                )
+            })
+            .get('/join-family', async ({store}: any): Promise<any> => {
+                console.log('store', store)
+                return (
+                    <GuestLayout>
+                        <JoinFamily/>
+                    </GuestLayout>
+                )
+            })
+            .post('join-family', async ({body, set, store, jwt, cookie: {auth}}: any) => {
+
+
+
+                const {familyCode} = body;
+                // validate family code
+                const familyId = await getFamilyIdByCode(familyCode);
+                if (!familyId) {
+                    set.status = 400;
+                    return {
+                        success: false,
+                        message: "Invalid family code",
+                    };
+                }
+
+                const user = store.user;
+                console.log(user)
+                if(!user.familyId) {
+                    const profile = await jwt.verify(auth.value);
+                    console.log('profile', profile);
+
+                    // update user family
+                    await prisma.user.update({
+                        where: {
+                            userId: profile.userId,
+                        },
+                        data: {
+                            familyId,
+                        },
+                    });
+                    set.redirect = "/";
+                }
+
+
+
+                return {
+                    success: true,
+                    message: "Family joined successfully",
+                };
+
+            },
+            {
+                body: t.Object({
+                    familyCode: t.String(),
+                }),
+            })
             .get('/logout', async ({cookie: {auth}, set}: any) => {
                 auth.set({
                     value: "",

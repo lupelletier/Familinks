@@ -12,63 +12,82 @@ import Login from "~/views/pages/guest/login";
 import {authMiddleware} from "~/middlewares/middleware";
 import Home from "~/views/pages/auth/home";
 import {logger} from "~/utils/logger";
-
-
+import {prisma} from "~/index";
 
 export const pageRouter = new Elysia()
-    .use(
-        jwt({
-            name: "jwt",
-            secret: Bun.env.JWT_SECRET!
-        })
-    )
-    // get the user from the session
-    .state('user', '' )
     // Route handler
-    .get('/', async ({ set, jwt, cookie: {auth}, store }: any) => {
+    .get('/', async ({ set, jwt, cookie: { auth }, store }: any) => {
         try {
-            // The token is automatically verified and the decoded payload is available as `jwt`
+            // Verify the token and decode the payload
             const profile = await jwt.verify(auth.value);
             console.log('profile', profile);
+            console.log('store', store);
+
             if (!profile) {
                 set.status = 401;
                 set.redirect = '/auth/home';
                 return;
             }
-            return(
+
+            // Check if the user is stored in the session and has a familyId
+            if (!store.user || !store.user.familyId) {
+                const user = await prisma.user.findUnique({
+                    where: {
+                        userId: profile.userId,
+                    },
+                });
+                console.log('user', user);
+                if (user) {
+                    store.user = user;
+                } else {
+                    set.status = 401;
+                    set.redirect = '/auth/home';
+                    return;
+                }
+
+                if (!store.user.familyId) {
+                    set.status = 401;
+                    set.redirect = '/auth/family';
+                    return;
+                }
+            }
+
+            return (
                 <MainLayout>
                     <Home user={store.user} />
                 </MainLayout>
             );
         } catch (error) {
-            // Handle unexpected errors
+            console.error('Error during authentication', error);
             set.status = 500;
-            return { message: 'Internal Server Error', error: error.message };
+            set.redirect = '/auth/home';
+            return;
         }
     })
-    /*    .get(
-            '/',
-            {
-                beforeHandle: async ({ set, cookie: { auth } }: any) => {
-                    console.log(auth.session);
-                    if (!auth.value) {
-                        set.status = 401;
-                        return <ErrorMessage message={'You are not connected'} />;
-                    }
-                }
-            },
-            async ({ jwt, set, cookie: { auth } }: any) => {
-                try {
-                    const profile = await jwt.verify(auth.value);
-                    if (!profile) {
-                        set.redirect = '/auth/login';
-                    }
-                } catch (error) {
+
+/*    .get(
+        '/',
+        {
+            beforeHandle: async ({ set, cookie: { auth } }: any) => {
+                console.log(auth.session);
+                if (!auth.value) {
                     set.status = 401;
-                    set.redirect = '/auth/login';
+                    return <ErrorMessage message={'You are not connected'} />;
                 }
             }
-        )*/
+        },
+        async ({ jwt, set, cookie: { auth } }: any) => {
+            try {
+                const profile = await jwt.verify(auth.value);
+                if (!profile) {
+                    set.redirect = '/auth/login';
+                }
+            } catch (error) {
+                set.status = 401;
+                set.redirect = '/auth/login';
+            }
+        }
+    )*/
     .get('/tree', async (): Promise<any> => {
         return (
             <MainLayout>
