@@ -10,16 +10,7 @@ export default function Home(props: {user: any }): any {
         <div class="flex flex-col overflow-y-auto md:h-screen">
             <img alt="logo" src='/LOGOS-VIOLET.png'/>
             <Badge name="Home" />
-            <div style={
-{
-                    backgroundImage: "url('../../../../public/LOGOS-VIOLET.png')",
-                    backgroundSize: "cover",
-                    backgroundRepeat: "no-repeat",
-                    height: "50vh"
-                }
-            }>
 
-            </div>
             <LoadingIndicator />
             <main class="flex flex-1 flex-col items-center justify-start p-2">
                 <div class="my-7 text-center sm:my-16">

@@ -33,7 +33,9 @@ export default function GuestLayout(props: {children: any}): any {
 
         <body class="bg-light h-screen w-full">
         <LoadingIndicator />
+        <div id="home-guest">
             {props.children}
+        </div>
         </body>
         <script
             defer

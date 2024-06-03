@@ -3,7 +3,7 @@ import HxLink from "~/views/components/hx-link";
 
 export default function LoginForm(): any{
     return (
-        <form id="login-form" class="w-full" action="/auth/login" method="POST">
+        <form class="login-form" hx-post="/auth/login" hx-target="#home-guest" hx-swap="innerHTML" hx-push-url="true">
             <div class={'space-y-4'}>
                 <div>
                     <label for="username" class="block text-gray-700 font-normal mb-2">Nom d'utilisateur</label>
@@ -20,7 +20,7 @@ export default function LoginForm(): any{
                 </div>
             </div>
             <div class="flex justify-center items-center mt-10">
-                <HxButton method="post" url="/auth/login" target='#login' display="Je me connecte" bgColor="bg-purple"/>
+                <button type="submit" class="bg-purple hover:bg-purple-dark text-white py-2 px-4 rounded-full focus:outline-none focus:shadow-outline">Je me connecte</button>
             </div>
             <div id="login"></div>
         </form>

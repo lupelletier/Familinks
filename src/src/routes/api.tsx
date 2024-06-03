@@ -1,6 +1,6 @@
 import { Elysia, t } from 'elysia';
 
-// TODO : import { swagger } from "@elysiajs/swagger";
+ import { swagger } from "@elysiajs/swagger";
 
 import { logger } from '~/utils/logger';
 
@@ -22,12 +22,7 @@ export const apiRouter = new Elysia().group('/api', app =>
         message: error.message,
       };
     })
-      /* TODO:
-      .use(swagger({
-      version: '0.0.1',
-      path: '/swagger',
-    })
-    )*/
+    .use(swagger())
     .post(
       '/sleep/:duration',
       async ({ params: { duration } }) => {

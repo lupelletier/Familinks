@@ -24,9 +24,9 @@ export const app = new Elysia()
             `Handling request: ${request.method} ${request.url} - ${request.headers.get('user-agent')}`
         );
     })*/
-/*    .onError(({ code, error }) => {
+   .onError(({ code, error }) => {
         return new Response(error.toString())
-    })*/
+    })
 /*    .on('afterHandle', async ({ request, response }) => {
         logger.info(
             `Handled request: ${request.method} ${request.url} - Status: ${response.statusCode}`

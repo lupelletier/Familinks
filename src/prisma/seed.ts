@@ -18,6 +18,18 @@ const main = async () => {
         await prisma.question.deleteMany();
         await prisma.response.deleteMany();
         console.log("Previous data removed.");
+        // seed test user luludegex
+        const { hashPassword, saltPassword } = await hashPasswordFn("password");
+        await prisma.user.create({
+            data: {
+                username: "luludegex",
+                firstname: "Lucie",
+                lastname: "Pelletier",
+                email: "luludegex@gmail.com",
+                hashPassword: hashPassword,
+                saltPassword: saltPassword,
+            },
+        });
         // Seed families
         const familySeed = new FamilySeed(4);
 

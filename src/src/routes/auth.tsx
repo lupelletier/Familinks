@@ -2,12 +2,11 @@ import { Elysia, t } from "elysia";
 import jwt from "@elysiajs/jwt";
 import {getFamilyIdByCode} from "~/utils/db";
 import {comparePassword, hashPasswordFn} from "~/utils/bcrypt";
-import {prisma} from "~/index";
-import MainLayout from "~/views/layouts/main";
 import Login from "~/views/pages/guest/login";
 import HomeGuest from "~/views/pages/guest/home";
 import GuestLayout from "~/views/layouts/guest";
 import SignUp from "~/views/pages/guest/signup";
+import {prisma} from "~/index";
 
 export const authRouter = (app: Elysia) =>
     app.group("/auth", (app) =>
@@ -179,10 +178,13 @@ export const authRouter = (app: Elysia) =>
                         path: "/",
                     });
                     store.user = user;
+                    console.log(user.familyId)
+                    user.familyId === null ? set.redirect = "/auth/family" : set.redirect = "/";
+                    set.redirect = "/";
                     return {
                         success: true,
                         data: user,
-                        message: "Account login successfully",
+                        message: "Account logged in successfully",
                     };
                 },
                 {

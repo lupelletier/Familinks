@@ -8,6 +8,7 @@ if [ "$ENVIRONNEMENT" != "prod" ]; then
 	# MY_PUBLIC_IP=$(curl -s ifconfig.me)
 #	MY_PUBLIC_IP="37.65.42.246"
   #MY_PUBLIC_IP="86.200.62.80"
-  MY_PUBLIC_IP="195.7.125.38"
+  #MY_PUBLIC_IP="195.7.125.38"
+  MY_PUBLIC_IP="81.185.174.32"
 	azd env set LOCAL_IP_ADDRESS $MY_PUBLIC_IP
 fi
