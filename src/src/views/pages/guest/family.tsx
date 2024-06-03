@@ -1,8 +1,3 @@
-import LoadingIndicator from "~/views/components/loading-indicator";
-import HxBackLink from "~/views/components/hx-back-link";
-import LoginForm from "~/views/components/authentication/login-form";
-import Badge from "~/views/components/badge";
-import SleepButton from "~/views/components/sleep-button";
 import HxButton from "~/views/components/hx-buttton";
 import HxLink from "~/views/components/hx-link";
 
@@ -38,6 +33,5 @@ console.log(props.user)
             </div>
             <img src="/violette_bonjour.png" alt="Violette Bonjour" class="fixed bottom-0 right-5 w-fit"/>
         </div>
-
     )
 }

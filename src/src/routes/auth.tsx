@@ -9,6 +9,8 @@ import SignUp from "~/views/pages/guest/signup";
 import {prisma} from "~/index";
 import JoinFamily from "~/views/pages/guest/joinFamily";
 import Family from "~/views/pages/guest/family";
+import CreateFamily from "~/views/pages/guest/createFamily";
+import {faker} from "@faker-js/faker";
 
 export const authRouter = (app: Elysia) =>
     app.group("/auth", (app) =>
@@ -214,9 +216,6 @@ export const authRouter = (app: Elysia) =>
                 )
             })
             .post('join-family', async ({body, set, store, jwt, cookie: {auth}}: any) => {
-
-
-
                 const {familyCode} = body;
                 // validate family code
                 const familyId = await getFamilyIdByCode(familyCode);
@@ -246,8 +245,6 @@ export const authRouter = (app: Elysia) =>
                     set.redirect = "/";
                 }
 
-
-
                 return {
                     success: true,
                     message: "Family joined successfully",
@@ -259,6 +256,66 @@ export const authRouter = (app: Elysia) =>
                     familyCode: t.String(),
                 }),
             })
+            .get('create-family', async (): Promise<any> => {
+                return (
+                    <GuestLayout>
+                        <CreateFamily/>
+                    </GuestLayout>
+                )
+            })
+            .post('/create-family', async ({body, set, store, jwt, cookie: {auth}}: any) => {
+            try {
+                const { familyName } = body;
+
+                if (!familyName) {
+                    set.status = 400;
+                    return { success: false, message: 'Family name is required' };
+                }
+
+                const profile = await jwt.verify(auth.value);
+                if (!profile) {
+                    set.status = 401;
+                    return { success: false, message: 'Unauthorized' };
+                }
+
+                // Generate a unique family code
+                const familyCode = faker.string.alphanumeric(8);
+
+                // Create the family
+                const family = await prisma.family.create({
+                    data: {
+                        name: familyName,
+                        code: familyCode,
+                    },
+                });
+
+                // Associate the family with the user
+                const user = await prisma.user.update({
+                    where: { userId: profile.userId },
+                    data: { familyId: family.familyId },
+                });
+
+                // Update the store
+                store.user = user;
+                set.redirect = '/';
+                return {
+                    success: true,
+                    message: 'Family created and associated successfully',
+                    data: {
+                        family,
+                        user,
+                    },
+                };
+            } catch (error) {
+                console.error('Error creating family:', error);
+                set.status = 500;
+                return { success: false, message: 'Internal Server Error' };
+            }
+        }, {
+            body: t.Object({
+                familyName: t.String(),
+            }),
+        })
             .get('/logout', async ({cookie: {auth}, set}: any) => {
                 auth.set({
                     value: "",
