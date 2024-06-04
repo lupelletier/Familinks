@@ -1,32 +1,64 @@
-import LoadingIndicator from '../../components/loading-indicator';
-import HxButton from '../../components/hx-buttton';
-import SleepButton from "../../components/sleep-button";
 import Badge from "~/views/components/badge";
-import logo from "../../../../public/LOGOS-VIOLET.png";
-export default function Home(props: {user: any }): any {
-    console.log('user', props.user);
-    return (
-        <div class="flex flex-col overflow-y-auto md:h-screen">
-            <img alt="logo" src='/LOGOS-VIOLET.png'/>
-            <Badge name="Home" />
+import {getFamilyByFamilyId, userAnsweredQuestion} from "~/services/daily";
+import AnswerComponent from "~/views/components/answer-component";
+import {getUsersByFamilyId} from "~/utils/db";
 
-            <LoadingIndicator />
-            <main class="flex flex-1 flex-col items-center justify-start p-2">
-                <div class="my-7 text-center sm:my-16">
-                    <h1 class="text-3xl uppercase md:text-3xl lg:text-4xl">Welcome, {props.user.username}</h1>
-                    <h2 class="mt-6 text-xs md:text-sm lg:text-lg">
-                        This is an experimental page.
-                    </h2>
+export default async function Home(props: { user: any, question: any }) {
+    console.log('user', props.user);
+    console.log('question', props.question)
+    const userAnswered = await userAnsweredQuestion(props.user.userId, props.question.questionId);
+    console.log('userAnswered', userAnswered);
+    const family = await getFamilyByFamilyId(props.user.familyId);
+    console.log('family', family);
+
+    const familyUsers = await getUsersByFamilyId(props.user.familyId);
+    console.log('familyUsers', familyUsers);
+
+    return (
+        <div class="h-screen w-full flex flex-col items-center">
+            <div class="flex items-center justify-center mt-7">
+                <img src="/LOGOS-VIOLET.png" alt="logo purple" class="w-1/2"/>
+            </div>
+            <div class="px-3 w-full pt-5">
+                <div class="flex justify-between items-end">
+                    <div class="pb-2 px-2">
+                        <Badge name="Question du jour"/>
+                    </div>
+                    <img src='/violette_happy_1.png' alt="violette happy"/>
                 </div>
-                <div >
-                    <SleepButton value="2" />
-                    <HxButton method={"get"} url={"/api/families"} target='#families' display="Get families green" bgColor="bg-green" fontColor="font-color-dark" />
-                    <HxButton method="get" url="/api/families" target='#families' display="Get Families" bgColor="bg-purple" />
+
+                <div class="flex justify-between items-center px-2 font-bold font-color-dark">
+                    Famille {family?.name}
                 </div>
-                <div id="users"></div>
-                <div id="families"></div>
-                <div id="alerts"></div>
-            </main>
+                <p class="text-sm font-semibold px-2 py-2">{props.question.question}</p>
+
+
+                <div class="flex flex-col items-center bg-lila rounded-md m-2">
+                    {userAnswered ? (
+                        <div>
+                            user aswered
+                        </div>
+
+                        ) : (
+                        <div class="flex flex-col items-center p-3">
+                            {familyUsers.map((user: any) => {
+                                console.log('user', user);
+                                return (
+                                    <AnswerComponent user={user} question={props.question}/>
+                                )
+                            })
+                            }
+                            <div id="answer" class="flex flex-col items-center w-full pt-5 pb-0.5">
+                                <button hx-post={"/api/answer"} hx-indicator="#loading-indicator" hw-swap="afterbegin"
+                                        type="submit"
+                                        class="ml-2 rounded-full bg-purple border p-2.5 text-sm font-medium font-color-light focus:outline-none focus:ring-1 focus:ring-white">
+                                    Répondre à la question
+                                </button>
+                            </div>
+                        </div>
+                    )}
+                </div>
+            </div>
         </div>
     );
 }

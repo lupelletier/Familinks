@@ -77,3 +77,13 @@ export const getFamilyIdByCode = async (code: string):Promise<number> => {
     })
     return getFamily ? getFamily.familyId : 0;
 }
+
+// Get user answer by user id and question id
+export const getUserDailyAnswer = async (userId: number, questionId: number) => {
+    return prisma.response.findFirst({
+        where: {
+            userId: userId,
+            questionId: questionId
+        }
+    });
+}

@@ -30,9 +30,9 @@ export default function MainLayout(props: { children: any }): any {
         <link href="/assets/css/index.min.css" rel="stylesheet"/>
     </head>
 
-    <body class="bg-white font-color-dark h-screen">
+    <body class="bg-light font-color-dark ">
         <LoadingIndicator />
-        <div id="main" class="h-full h-full pb-16">
+        <div id="main" class="w-full h-full pb-16">
             {props.children}
         </div>
         <MainNavigation />

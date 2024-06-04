@@ -13,6 +13,7 @@ import {authMiddleware} from "~/middlewares/middleware";
 import Home from "~/views/pages/auth/home";
 import {logger} from "~/utils/logger";
 import {prisma} from "~/index";
+import {getDailyQuestion, userAnsweredQuestion} from "~/services/daily";
 
 export const pageRouter = new Elysia()
     // Route handler
@@ -51,10 +52,12 @@ export const pageRouter = new Elysia()
                     return;
                 }
             }
+            const question = await getDailyQuestion();
+            console.log('question', question);
 
             return (
                 <MainLayout>
-                    <Home user={store.user} />
+                    <Home user={store.user} question={question} />
                 </MainLayout>
             );
         } catch (error) {
