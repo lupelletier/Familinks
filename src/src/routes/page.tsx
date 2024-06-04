@@ -16,6 +16,7 @@ import {prisma} from "~/index";
 import {getDailyQuestion, getFamilyByFamilyId, userAnsweredQuestion} from "~/services/daily";
 import AnswerQuestion from "~/views/pages/auth/answerQuestion";
 import {profile} from "bun:jsc";
+import {getUsersByFamilyId} from "~/utils/db";
 
 export const pageRouter = new Elysia()
     .state('user', '' )
@@ -108,32 +109,39 @@ export const pageRouter = new Elysia()
             }
         }
     )*/
-    .get('/tree', async ({ store, jwt, set, cookie:{auth} }: any): Promise<any> => {
-        // Check if the user object exists in the store
+    .get('/tree', async ({ store, jwt, set, cookie: { auth } }: any): Promise<any> => {
+        // Check if the user is not already stored in the state
+
+    try {
         if (!store.user) {
-            set.status = 401; // Unauthorized status
-            return; // Return without rendering the page
-        }
-
-        try {
             // Verify the JWT token to ensure authentication
-            await jwt.verify(auth.value);
-        } catch (error) {
-            set.status = 401; // Unauthorized status
-            return; // Return without rendering the page
+            const profile = await jwt.verify(auth.value);
+            if (!profile) {
+                set.status = 401;
+                set.redirect = '/auth/home';
+                return;
+            }
+            // Fetch the user details from jwt token
+            store.user = await prisma.user.findUnique({
+                where: {
+                    userId: profile.userId,
+                },
+            });
         }
-
-        // Assuming you have a function to fetch family details by family ID
         const family = await getFamilyByFamilyId(store.user.familyId);
-
-        // Render the Tree component within the MainLayout
+        const familyUsers = await getUsersByFamilyId(store.user.familyId);
         return (
             <MainLayout>
-                <Tree user={store.user} family={family} />
+                <Tree user={store.user} familyUsers={familyUsers} familyName={family?.name}/>
             </MainLayout>
-        );
+        )
+        } catch (error) {
+                // Set status to 401 (Unauthorized) and redirect to home page if authentication fails
+                set.status = 401;
+                set.redirect = '/auth/home';
+                return; // Return without rendering the page
+        }
     })
-
     .get('/history', async (): Promise<any> => {
         return (
             <MainLayout>

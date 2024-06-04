@@ -16,7 +16,7 @@ export default async function Profile(props: { user: any }) {
     }
 
     return (
-        <div>
+        <div class="pb-10">
             <div class="w-full flex flex-col items-center pb-7">
                 <div class="flex items-center justify-center mt-7">
                     <img src="/LOGOS-VIOLET.png" alt="logo purple" class="w-1/2"/>
@@ -30,7 +30,8 @@ export default async function Profile(props: { user: any }) {
                     </div>
                 </div>
 
-                <div class="bg-lila rounded-2xl p-6 mx-0.5 mt-5">
+                <div class="bg-lila rounded-2xl p-6 mx-0.5 mt-5 flex flex-col items-center">
+                    <img src="/violette_happy_2.png" alt="user icon" class="w-20 rounded-full bg-green"/>
                     <form id="profile-update-form" hx-post="/api/profile/update" hx-target="#home-auth"
                           hx-swap="innerHTML"
                           hx-push-url="true">
