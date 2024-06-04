@@ -12,7 +12,7 @@ export default function HomeGuest(): any {
                     <HxLink method="get" target="#home-guest" swap="innerHTML" url="/auth/signup" display="Je m'inscris"/>
                 </div>
             </div>
-            <img src="/violette_bonjour.png" alt="Violette Bonjour" class="fixed bottom-0 w-fit"/>
+            <img src="/VIOLETTE_bonjour.png" alt="Violette Bonjour" class="fixed bottom-0 w-3/4"/>
         </div>
     );
 }

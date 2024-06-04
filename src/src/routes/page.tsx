@@ -13,7 +13,7 @@ import {authMiddleware} from "~/middlewares/middleware";
 import Home from "~/views/pages/auth/home";
 import {logger} from "~/utils/logger";
 import {prisma} from "~/index";
-import {getDailyQuestion, userAnsweredQuestion} from "~/services/daily";
+import {getDailyQuestion, getFamilyByFamilyId, userAnsweredQuestion} from "~/services/daily";
 import AnswerQuestion from "~/views/pages/auth/answerQuestion";
 import {profile} from "bun:jsc";
 
@@ -108,13 +108,32 @@ export const pageRouter = new Elysia()
             }
         }
     )*/
-    .get('/tree', async (): Promise<any> => {
+    .get('/tree', async ({ store, jwt, set, cookie:{auth} }: any): Promise<any> => {
+        // Check if the user object exists in the store
+        if (!store.user) {
+            set.status = 401; // Unauthorized status
+            return; // Return without rendering the page
+        }
+
+        try {
+            // Verify the JWT token to ensure authentication
+            await jwt.verify(auth.value);
+        } catch (error) {
+            set.status = 401; // Unauthorized status
+            return; // Return without rendering the page
+        }
+
+        // Assuming you have a function to fetch family details by family ID
+        const family = await getFamilyByFamilyId(store.user.familyId);
+
+        // Render the Tree component within the MainLayout
         return (
             <MainLayout>
-                <Tree/>
+                <Tree user={store.user} family={family} />
             </MainLayout>
         );
     })
+
     .get('/history', async (): Promise<any> => {
         return (
             <MainLayout>

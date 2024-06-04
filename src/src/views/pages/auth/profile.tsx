@@ -24,13 +24,13 @@ export default async function Profile(props: { user: any }) {
                 <div class="px-3 w-full">
                     <div class="flex justify-between items-end">
                         <div class="pb-2 px-2">
-                            <Badge name="Profil"/>
+                            <Badge name="Profile"/>
                         </div>
-                        <img src='/violette_happy_1.png' alt="violette happy"/>
+                        <img src='/violette_happy_1.png' alt="violette happy" class="w-16"/>
                     </div>
                 </div>
 
-                <div class="bg-lila rounded-md p-6 mx-0.5 mt-5">
+                <div class="bg-lila rounded-2xl p-6 mx-0.5 mt-5">
                     <form id="profile-update-form" hx-post="/api/profile/update" hx-target="#home-auth"
                           hx-swap="innerHTML"
                           hx-push-url="true">

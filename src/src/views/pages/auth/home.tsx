@@ -19,14 +19,14 @@ export default async function Home(props: { user: any, question: any }) {
                     <div class="pb-2 px-2">
                         <Badge name="Question du jour"/>
                     </div>
-                    <img src='/violette_happy_1.png' alt="violette happy"/>
+                    <img src='/violette_happy_1.png' alt="violette happy" class="w-16"/>
                 </div>
 
                 <div class="flex justify-between items-center px-2 font-bold font-color-dark">
                     Famille {family?.name}
                 </div>
                 <p class="text-sm font-semibold px-2 py-2">{props.question.question}</p>
-                <div class="flex flex-col items-center justify-between bg-lila rounded-md m-2">
+                <div class="flex flex-col items-center justify-between bg-lila rounded-2xl m-2">
                     <div class="flex flex-col items-center p-3">
                         {familyUsers.map((user: any) => {
                             return (

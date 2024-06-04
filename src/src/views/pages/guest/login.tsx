@@ -14,11 +14,11 @@ export default function Login(): any {
                 <div class="bg-light w-full mt-4">
                     <LoginForm/>
                 </div>
-                <div
+{/*                <div
                     class="w-full py-3 flex items-center text-sm font-color-dark before:flex-1 before:border-t before:me-6 after:flex-1 after:border-t after:ms-6 before:border-neutral-600 after:border-neutral-600">
                     ou
-                </div>
-                <img src="/violette_bonjour.png" alt="Violette Bonjour" class="fixed bottom-0 right-5 w-fit"/>
+                </div>*/}
+                <img src="/VIOLETTE_bonjour.png" alt="Violette Bonjour" class="fixed bottom-0 right-0 w-3/4"/>
             </div>
         </div>
     );

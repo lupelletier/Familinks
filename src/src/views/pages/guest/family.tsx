@@ -31,7 +31,7 @@ console.log(props.user)
                     />
                 </div>
             </div>
-            <img src="/violette_bonjour.png" alt="Violette Bonjour" class="fixed bottom-0 right-5 w-fit"/>
+            <img src="/VIOLETTE_bonjour.png" alt="Violette Bonjour" class="fixed bottom-0 right-5 w-fit w-3/4"/>
         </div>
     )
 }
