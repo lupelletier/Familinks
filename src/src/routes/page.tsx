@@ -15,8 +15,10 @@ import {logger} from "~/utils/logger";
 import {prisma} from "~/index";
 import {getDailyQuestion, userAnsweredQuestion} from "~/services/daily";
 import AnswerQuestion from "~/views/pages/auth/answerQuestion";
+import {profile} from "bun:jsc";
 
 export const pageRouter = new Elysia()
+    .state('user', '' )
     // Route handler
     .get('/', async ({ set, jwt, cookie: { auth }, store }: any) => {
         try {
@@ -120,10 +122,50 @@ export const pageRouter = new Elysia()
             </MainLayout>
         );
     })
-    .get('/profile', async (): Promise<any> => {
-        return (
+    .get('/profile', async ({ store, set, jwt, cookie: { auth } }: any): Promise<any> => {
+        console.log('Initial store:', store);
+
+        try {
+            if (!store.user) {
+                const token = auth.value;
+                if (!token) {
+                    set.status = 401;
+                    set.redirect = '/auth/home';
+                    return;
+                }
+
+                const profile = await jwt.verify(token);
+                if (!profile) {
+                    set.status = 401;
+                    set.redirect = '/auth/home';
+                    return;
+                }
+
+                console.log('Profile:', profile);
+
+                store.user = await prisma.user.findUnique({
+                    where: {
+                        userId: profile.userId,
+                    },
+                });
+
+                if (!store.user) {
+                    set.status = 404;
+                    set.redirect = '/auth/home';
+                    return;
+                }
+            }
+        } catch (error) {
+            console.error('Error during authentication', error);
+            set.status = 500;
+            set.redirect = '/auth/home';
+            return;
+        }
+            console.log('Updated store:', store);
+
+            return (
             <MainLayout>
-                <Profile/>
+                <Profile user={store.user}/>
             </MainLayout>
         );
     })

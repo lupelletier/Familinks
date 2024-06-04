@@ -34,9 +34,13 @@ export default async function Home(props: { user: any, question: any }) {
                             )
                         })}
                     </div>
-                 <div class="mb-10">
-                    <HxButton method="get" url="/answer-question" target="#home-auth" swap="innerHTML" display="Répondre à la question" bgColor="bg-purple"/>
-                 </div>
+                     <div class="mb-10">
+                         {userAnswered ?
+                             null : (
+                             <HxButton method="get" url="/answer-question" target="#home-auth" swap="innerHTML" display="Répondre à la question" bgColor="bg-purple"/>
+                            )
+                         }
+                     </div>
                 </div>
             </div>
         </div>

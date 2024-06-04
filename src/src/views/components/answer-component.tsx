@@ -44,7 +44,6 @@ export default async function AnswerComponent(props: {currentUserId: number, use
             ) :
             (
                 <div>
-
                 </div>
             )
         )

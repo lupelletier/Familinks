@@ -33,3 +33,7 @@ export const app = new Elysia()
         );
     })*/
     .use(mainRouter);
+
+    function handleRequest(request: Request) {
+        return app.handle(request);
+    }

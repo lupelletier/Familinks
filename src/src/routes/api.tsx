@@ -1,8 +1,8 @@
-import { Elysia, t } from 'elysia';
+import {Elysia, t} from 'elysia';
 
- import { swagger } from "@elysiajs/swagger";
+import {swagger} from "@elysiajs/swagger";
 
-import { logger } from '~/utils/logger';
+import {logger} from '~/utils/logger';
 
 
 import AlertMessage from '~/views/components/alert-message';
@@ -10,7 +10,7 @@ import MyButton from '~/views/components/sleep-button';
 import FamiliesTable from '~/views/components/families-table';
 import UsersTable from '~/views/components/users-table';
 
-import {getAllFamilies, getUsersByFamilyId, getUsersByFamilyName} from '~/utils/db'
+import {getAllFamilies, getUsersByFamilyId} from '~/utils/db'
 import {prisma} from "~/index";
 import {getDailyQuestion} from "~/services/daily";
 
@@ -47,6 +47,31 @@ export const apiRouter = new Elysia().group('/api', app =>
             }
 
       })
+      .post('/profile/update', async ({body, store, set}:any) => {
+            if (store.user) {
+                try {
+                    store.user = await prisma.user.update({
+                        where: {
+                            userId: store.user.userId,
+                        },
+                        data: {
+                            email: body.email,
+                            username: body.username,
+                        },
+                    });
+                    console.log('User updated');
+                    set.redirect = '/';
+                } catch (error) {
+                    console.error('Error during user update', error);
+                    return {
+                        code: 500,
+                        message: 'Error during user update',
+                    };
+                }
+
+            }
+        }
+    )
     .post(
       '/sleep/:duration',
       async ({ params: { duration } }) => {
