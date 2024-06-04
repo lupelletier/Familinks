@@ -40,3 +40,18 @@ export const getDailyAnswer = async (user: any, question: any) => {
         }
     });
 }
+
+
+
+export async function getAllAnswers(questionId: number) {
+    return prisma.response.findMany({
+        where: { questionId },
+        include: { user: true },
+    });
+}
+
+export async function getUserDailyAnswer(userId: number, questionId: number) {
+    return prisma.response.findFirst({
+        where: { userId, questionId },
+    });
+}

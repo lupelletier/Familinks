@@ -11,6 +11,8 @@ import FamiliesTable from '~/views/components/families-table';
 import UsersTable from '~/views/components/users-table';
 
 import {getAllFamilies, getUsersByFamilyId, getUsersByFamilyName} from '~/utils/db'
+import {prisma} from "~/index";
+import {getDailyQuestion} from "~/services/daily";
 
 export const apiRouter = new Elysia().group('/api', app =>
   app
@@ -23,6 +25,28 @@ export const apiRouter = new Elysia().group('/api', app =>
       };
     })
     .use(swagger())
+      .post('/answer-question', async ({body, store, set}:any) => {
+            const question = await getDailyQuestion();
+            if (store.user) {
+                try {
+                    await prisma.response.create({
+                        data: {
+                            userId: store.user.userId,
+                            questionId: question.questionId,
+                            response: body.response,
+                        },
+                    });
+                } catch (error) {
+                    console.error('Error during response creation', error);
+                    return {
+                        code: 500,
+                        message: 'Error during response creation',
+                    };
+                }
+                set.redirect = '/';
+            }
+
+      })
     .post(
       '/sleep/:duration',
       async ({ params: { duration } }) => {

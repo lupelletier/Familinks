@@ -14,6 +14,7 @@ import Home from "~/views/pages/auth/home";
 import {logger} from "~/utils/logger";
 import {prisma} from "~/index";
 import {getDailyQuestion, userAnsweredQuestion} from "~/services/daily";
+import AnswerQuestion from "~/views/pages/auth/answerQuestion";
 
 export const pageRouter = new Elysia()
     // Route handler
@@ -66,6 +67,20 @@ export const pageRouter = new Elysia()
             set.redirect = '/auth/home';
             return;
         }
+    })
+    .get('/answer-question', async ({ set, store }: any) => {
+        if (!store.user || !store.user.familyId) {
+            set.status = 401;
+            set.redirect = '/auth/home';
+            return;
+        }
+        const question = await getDailyQuestion();
+
+        return (
+            <MainLayout>
+                <AnswerQuestion user={store.user} question={question} />
+            </MainLayout>
+        );
     })
 
 /*    .get(
