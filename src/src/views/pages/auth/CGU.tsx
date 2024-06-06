@@ -1,21 +1,35 @@
 import Badge from "~/views/components/badge";
 import HxBackLink from "~/views/components/hx-back-link";
 
-export default function CGU() {
+export default function CGU(props:{guest: any}) {
     return (
         <div class="w-full flex flex-col items-center pb-7">
             <div class="flex items-center justify-center mt-7">
                 <img src="/LOGOS-VIOLET.png" alt="logo purple" class="w-1/2"/>
             </div>
+
             <div class="px-3 w-full">
-                <div class="flex justify-between items-end">
-                    <div class="pb-2 px-2 flex flex-col items-start">
-                        <HxBackLink method="get" url="/parameters" target="#home-auth" swap="innerHTML"
-                                    style="left-0 underline pb-2"/>
-                        <Badge name="Paramètres"/>
-                    </div>
-                    <img src='/VIOLETTE_happy_1.png' alt="violette happy" class="w-16"/>
-                </div>
+                {
+                    !props.guest
+                        ?
+                        (
+                            <div class="flex justify-between items-end">
+                                <div class="pb-2 px-2 flex flex-col items-start">
+                                    <HxBackLink method="get" url="/parameters" target="#home-auth" swap="innerHTML"
+                                                style="left-0 underline pb-2"/>
+                                    <Badge name="Paramètres"/>
+                                </div>
+                                <img src='/VIOLETTE_happy_1.png' alt="violette happy" class="w-16"/>
+                            </div>
+                        )
+                        : <div class="flex justify-between items-end">
+                            <div class="pb-2 px-2 flex flex-col items-start">
+                                <HxBackLink method="get" url="/auth/signup" target="#home-guest" swap="innerHTML"
+                                            style="left-0 underline pb-2"/>
+                            </div>
+                            <img src='/VIOLETTE_happy_1.png' alt="violette happy" class="w-16"/>
+                        </div>
+                }
                 <div class="flex flex-col items-start justify-between bg-lila rounded-2xl m-2">
                     <div class="flex flex-col items-center justify-center bg-light m-3 space-y-4">
                         <h2 class="text-sm font-semibold p-2">Conditions générales d'utilisation</h2>

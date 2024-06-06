@@ -130,7 +130,7 @@ export const pageRouter = new Elysia()
             </MainLayout>
         );
     })
-    .get('/parameters', async ({profile, user, set}): Promise<any> => {
+    .get('/parameters', async ({profile, user, set}: any): Promise<any> => {
 
 
         try {
@@ -148,9 +148,7 @@ export const pageRouter = new Elysia()
         }
 
         return (
-            <MainLayout>
-                <Parameters user={user}/>
-            </MainLayout>
+                <Parameters />
         );
     })
     .get('/confidentiality-policies' , async () => {
@@ -170,7 +168,7 @@ export const pageRouter = new Elysia()
     .get('/CGU', async () => {
         return (
             <MainLayout>
-                <CGU />
+                <CGU guest={false} />
             </MainLayout>
         );
     })

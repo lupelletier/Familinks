@@ -46,8 +46,8 @@ export default function SignupForm(): any {
                     </div>
                 </div>
             </div>
-            <div class="flex justify-center items-center mt-10">
-                <HxButton method="post" swap="innerHTML" url="/auth/signup" target='#signup' display="Je m'inscrit" bgColor="bg-purple"/>
+            <div class="flex justify-center items-center mt-10 mb-10">
+                <HxButton method="post" swap="innerHTML" url="/auth/signup" target='#signup' display="Je m'inscris" bgColor="bg-purple"/>
             </div>
             <div id="signup"></div>
         </form>

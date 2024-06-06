@@ -5,10 +5,20 @@ import { authRouter } from "~/routes/auth";
 import { swagger } from "@elysiajs/swagger";
 import jwt from "@elysiajs/jwt";
 import {authMiddleware} from "~/middlewares/middleware";
+import CGU from "~/views/pages/auth/CGU";
+import {Html} from "@elysiajs/html";
+import GuestLayout from "~/views/layouts/guest";
 
 export const mainRouter = new Elysia()
     mainRouter
     .use(swagger())
+    .get('/terms', async () => {
+        return (
+            <GuestLayout>
+                <CGU guest={true} />
+            </GuestLayout>
+        );
+    })
     .use(jwt({ name: "jwt", secret: "secret" }))
     .derive(authMiddleware())
     .use(apiRouter)

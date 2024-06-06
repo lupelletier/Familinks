@@ -21,7 +21,6 @@ export default function GuestLayout(props: {children: any}): any {
                 content="Familinks, Family, Links, App"
             />
 
-
             <script src="https://unpkg.com/htmx.org@1.9.11"></script>
             <script src="https://unpkg.com/htmx.org@1.9.12/dist/ext/disable-element.js"></script>
 
@@ -34,7 +33,7 @@ export default function GuestLayout(props: {children: any}): any {
         <body class="bg-light h-screen w-full">
         <div id="desktop" class="w-full text-lg font-color-dark flex display-center justify-center items-center text-center mt-20">
             <div class="flex justify-center align-middle items-center text-center ">
-                <img src="/VIOLETTE_bonjour.png" alt="logo violette" class="w-1/3 "/>
+                <img src="/VIOLETTE_pasHappy1.png" alt="logo violette" class="w-1/3 "/>
             </div>
             <h1 class="text-3xl font-bold font-color-dark mb-4">Oups !</h1>
             <p class="text-lg text-gray-700 mb-6">Notre application n'est actuellement pas disponible sur
