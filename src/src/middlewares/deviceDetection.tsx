@@ -3,12 +3,11 @@ import {logger} from "~/utils/logger";
 import GuestLayout from "~/views/layouts/guest";
 
 export function deviceDetectionMiddleware() {
-    return new Elysia().on('beforeHandle', async ({ request, response }) => {
+    return new  Elysia().on('beforeHandle', async ({ request, response }: any) => {
         const userAgent = request.headers.get('user-agent') || '';
         logger.info(
             `Handling request: ${request.method} ${request.url} - ${request.headers.get('user-agent')}`
-        );
-        console.log('User agent:', userAgent)
+        )
         if (!isMobile(userAgent)) {
             return (
                 <GuestLayout>
@@ -26,6 +25,7 @@ export function deviceDetectionMiddleware() {
 }
 
 function isMobile(userAgent: string): boolean {
+    console.log("here");
     const mobileRegex = /Mobile|Android|iP(ad|hone)/i;
     return mobileRegex.test(userAgent);
 }

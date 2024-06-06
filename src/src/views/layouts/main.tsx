@@ -31,11 +31,20 @@ export default function MainLayout(props: { children: any }): any {
       </head>
 
       <body class="bg-light font-color-dark">
+      <div id="desktop">
+          unavailable on desktop !
+      </div>
+      <div id="main">
+
       <LoadingIndicator/>
       <div id="home-auth" class="w-full pb-16">
           {props.children}
           <MainNavigation/>
       </div>
+
+      </div>
+
+
       </body>
 
       <script

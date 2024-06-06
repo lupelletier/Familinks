@@ -11,6 +11,7 @@ import JoinFamily from "~/views/pages/guest/joinFamily";
 import Family from "~/views/pages/guest/family";
 import CreateFamily from "~/views/pages/guest/createFamily";
 import {faker} from "@faker-js/faker";
+import {deviceDetectionMiddleware} from "~/middlewares/deviceDetection";
 
 export const authRouter = (app: Elysia) =>
     app.group("/auth", (app) =>

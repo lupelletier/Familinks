@@ -4,16 +4,18 @@ import {pageRouter} from "~/routes/page";
 import {authRouter} from "~/routes/auth";
 import {swagger} from "@elysiajs/swagger";
 import jwt from "@elysiajs/jwt";
+import {deviceDetectionMiddleware} from "~/middlewares/deviceDetection";
 
 export const mainRouter = new Elysia()
     mainRouter
+    .use(deviceDetectionMiddleware)
     .use(swagger())
         // get the user from the session
     .state('user', '' )
     .use(
         jwt({
             name: "jwt",
-            secret: Bun.env.JWT_SECRET!
+            secret: "secret",
         })
     )
     .use(apiRouter)

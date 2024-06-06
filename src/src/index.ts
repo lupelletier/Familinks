@@ -4,6 +4,7 @@ import { staticPlugin } from '@elysiajs/static';
 import {mainRouter} from "~/routes/main";
 import {PrismaClient} from "@prisma/client";
 import {deviceDetectionMiddleware} from "~/middlewares/deviceDetection";
+import {logger} from "~/utils/logger";
 
 // prisma client
 export const prisma = new PrismaClient();
@@ -23,7 +24,8 @@ export const app = new Elysia()
         logger.info(
             `Handling request: ${request.method} ${request.url} - ${request.headers.get('user-agent')}`
         );
-    })*/
+    })
+    */
    .onError(({ code, error }) => {
         return new Response(error.toString())
     })
@@ -33,7 +35,3 @@ export const app = new Elysia()
         );
     })*/
     .use(mainRouter);
-
-    function handleRequest(request: Request) {
-        return app.handle(request);
-    }
