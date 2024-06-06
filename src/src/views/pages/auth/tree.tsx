@@ -14,7 +14,7 @@ export default async function Tree(props: { familyUsers: any, user: any, familyN
                     <div class="pb-2 px-2">
                         <Badge name="Question du jour"/>
                     </div>
-                    <img src='/violette_happy_1.png' alt="violette happy" class="w-16"/>
+                    <img src='/VIOLETTE_happy_1.png' alt="violette happy" class="w-16"/>
                 </div>
 
                 <div class="flex justify-between items-center px-2 font-bold font-color-dark">

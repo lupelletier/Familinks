@@ -23,13 +23,13 @@ export default async function AnswerComponent(props: {currentUserId: number, use
                                     {dailyAnswer?.response}
                                 </p>
                             </div>
-                                <img src="/violette_happy_2.png" alt="user icon" class="w-10 rounded-full bg-green"/>
+                                <img src="/VIOLETTE_happy_2.png" alt="user icon" class="w-10 rounded-full bg-green"/>
                         </div>
                     </div>
                 ) : (
                     <div class="flex flex-col items-center bg-lila rounded-md m-2 w-full">
                         <div class="flex items-start justify-between">
-                                <img src="/violette_happy_2.png" alt="user icon" class="w-10 bg-green rounded-full"/>
+                                <img src="/VIOLETTE_happy_2.png" alt="user icon" class="w-10 bg-green rounded-full"/>
                             <div class="mx-3 flex flex-col">
                                 <p class="text-xs font-semibold pb-1">
                                     {props.user.username}

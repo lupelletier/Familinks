@@ -12,7 +12,7 @@ export default function QuestionHistory() {
                     <div class="pb-2 px-2">
                         <Badge name="Historique"/>
                     </div>
-                    <img src='/violette_happy_1.png' alt="violette happy" class="w-16"/>
+                    <img src='/VIOLETTE_happy_1.png' alt="violette happy" class="w-16"/>
                 </div>
             </div>
             <div class="flex flex-col items-start justify-between bg-lila rounded-2xl mt-10 m-2 p-3">

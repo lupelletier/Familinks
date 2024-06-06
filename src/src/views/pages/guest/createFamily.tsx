@@ -8,7 +8,7 @@ export default function CreateFamily(): any {
         <div class="h-screen w-full ">
             <LoadingIndicator/>
             <div class={'w-full flex justify-center items-center'}>
-                <img src="/LOGOS-VIOLET.png" alt="logo purple" class="w-1/2 fixed top-0 mt-4"/>
+                <img src="/LOGOS-VIOLET.png" alt="logo purple" class="w-1/2 absolute top-0 mt-4"/>
             </div>
             <div class="mt-24 mx-5 flex flex-col justify-center items-center">
                 <HxBackLink method="get" url="/auth/family" target="#home-guest" swap="innerHTML"/>

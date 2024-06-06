@@ -5,7 +5,7 @@ export default function Family(props: {user: any}) {
 console.log(props.user)
     return (
         <div class="h-screen flex flex-col justify-between items-center">
-                <img src="/LOGOS-VIOLET.png" alt="logo purple" class="w-1/2 fixed top-0 mt-4"/>
+                <img src="/LOGOS-VIOLET.png" alt="logo purple" class="w-1/2 absolute top-0 mt-4"/>
             <div class="flex flex-col items-center justify-center flex-grow space-y-2 px-8">
                 <div class="w-full flex justify-center">
                     <div class="text-lg text-center font-bold font-color-dark mb-8 px-2">

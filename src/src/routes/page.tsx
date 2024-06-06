@@ -10,6 +10,7 @@ import {prisma} from "~/index";
 import {getDailyQuestion, getFamilyByFamilyId, userAnsweredQuestion} from "~/services/daily";
 import AnswerQuestion from "~/views/pages/auth/answerQuestion";
 import {getUsersByFamilyId} from "~/utils/db";
+import Parameters from "~/views/pages/auth/parameters";
 
 export const pageRouter = new Elysia()
     .state('user', '' )
@@ -186,6 +187,53 @@ export const pageRouter = new Elysia()
             return (
             <MainLayout>
                 <Profile user={store.user}/>
+            </MainLayout>
+        );
+    })
+    .get('/parameters', async ({ store, set, jwt, cookie: { auth } }: any): Promise<any> => {
+        console.log('Initial store:', store);
+
+        try {
+            if (!store.user) {
+                const token = auth.value;
+                if (!token) {
+                    set.status = 401;
+                    set.redirect = '/auth/home';
+                    return;
+                }
+
+                const profile = await jwt.verify(token);
+                if (!profile) {
+                    set.status = 401;
+                    set.redirect = '/auth/home';
+                    return;
+                }
+
+                console.log('Profile:', profile);
+
+                store.user = await prisma.user.findUnique({
+                    where: {
+                        userId: profile.userId,
+                    },
+                });
+
+                if (!store.user) {
+                    set.status = 404;
+                    set.redirect = '/auth/home';
+                    return;
+                }
+            }
+        } catch (error) {
+            console.error('Error during authentication', error);
+            set.status = 500;
+            set.redirect = '/auth/home';
+            return;
+        }
+        console.log('Updated store:', store);
+
+        return (
+            <MainLayout>
+                <Parameters user={store.user}/>
             </MainLayout>
         );
     })
