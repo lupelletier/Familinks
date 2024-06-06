@@ -1,22 +1,16 @@
 import { Elysia } from "elysia";
-import {apiRouter} from "~/routes/api";
-import {pageRouter} from "~/routes/page";
-import {authRouter} from "~/routes/auth";
-import {swagger} from "@elysiajs/swagger";
+import { apiRouter } from "~/routes/api";
+import { pageRouter } from "~/routes/page";
+import { authRouter } from "~/routes/auth";
+import { swagger } from "@elysiajs/swagger";
 import jwt from "@elysiajs/jwt";
-import {deviceDetectionMiddleware} from "~/middlewares/deviceDetection";
+import {authMiddleware} from "~/middlewares/middleware";
 
 export const mainRouter = new Elysia()
     mainRouter
     .use(swagger())
-        // get the user from the session
-    .state('user', '' )
-    .use(
-        jwt({
-            name: "jwt",
-            secret: "secret",
-        })
-    )
+    .use(jwt({ name: "jwt", secret: "secret" }))
+    .derive(authMiddleware())
     .use(apiRouter)
     .use(pageRouter)
-    .use(authRouter(mainRouter))
+    .use(authRouter(mainRouter));

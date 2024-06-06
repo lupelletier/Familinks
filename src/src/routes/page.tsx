@@ -13,49 +13,18 @@ import {getUsersByFamilyId} from "~/utils/db";
 import Parameters from "~/views/pages/auth/parameters";
 
 export const pageRouter = new Elysia()
-    .state('user', '' )
     // Route handler
-    .get('/', async ({ set, jwt, cookie: { auth }, store }: any) => {
+    .get('/', async ({ set, profile, user }: any) => {
         try {
-            // Verify the token and decode the payload
-            const profile = await jwt.verify(auth.value);
-            console.log('profile', profile);
-            console.log('store', store);
-
-            if (!profile) {
+            if (!profile || !user) {
                 set.status = 401;
                 set.redirect = '/auth/home';
                 return;
             }
-
-            // Check if the user is stored in the session and has a familyId
-            if (!store.user || !store.user.familyId) {
-                const user = await prisma.user.findUnique({
-                    where: {
-                        userId: profile.userId,
-                    },
-                });
-                console.log('user', user);
-                if (user) {
-                    store.user = user;
-                } else {
-                    set.status = 401;
-                    set.redirect = '/auth/home';
-                    return;
-                }
-
-                if (!store.user.familyId) {
-                    set.status = 401;
-                    set.redirect = '/auth/family';
-                    return;
-                }
-            }
             const question = await getDailyQuestion();
-            console.log('question', question);
-
             return (
                 <MainLayout>
-                    <Home user={store.user} question={question} />
+                    <Home user={user} question={question} />
                 </MainLayout>
             );
         } catch (error) {
@@ -79,61 +48,29 @@ export const pageRouter = new Elysia()
             </MainLayout>
         );
     })
-
-/*    .get(
-        '/',
-        {
-            beforeHandle: async ({ set, cookie: { auth } }: any) => {
-                console.log(auth.session);
-                if (!auth.value) {
-                    set.status = 401;
-                    return <ErrorMessage message={'You are not connected'} />;
-                }
-            }
-        },
-        async ({ jwt, set, cookie: { auth } }: any) => {
-            try {
-                const profile = await jwt.verify(auth.value);
-                if (!profile) {
-                    set.redirect = '/auth/login';
-                }
-            } catch (error) {
-                set.status = 401;
-                set.redirect = '/auth/login';
-            }
-        }
-    )*/
-    .get('/tree', async ({ store, jwt, set, cookie: { auth } }: any): Promise<any> => {
+    .get('/tree', async ({user,profile, set}:any): Promise<any> => {
         // Check if the user is not already stored in the state
-
     try {
-        if (!store.user) {
+        if (!user) {
             // Verify the JWT token to ensure authentication
-            const profile = await jwt.verify(auth.value);
             if (!profile) {
                 set.status = 401;
                 set.redirect = '/auth/home';
                 return;
             }
-            // Fetch the user details from jwt token
-            store.user = await prisma.user.findUnique({
-                where: {
-                    userId: profile.userId,
-                },
-            });
         }
-        const family = await getFamilyByFamilyId(store.user.familyId);
-        const familyUsers = await getUsersByFamilyId(store.user.familyId);
+        const family = await getFamilyByFamilyId(user.familyId);
+        const familyUsers = await getUsersByFamilyId(user.familyId);
         return (
             <MainLayout>
-                <Tree user={store.user} familyUsers={familyUsers} familyName={family?.name}/>
+                <Tree user={user} familyUsers={familyUsers} familyName={family?.name}/>
             </MainLayout>
         )
         } catch (error) {
                 // Set status to 401 (Unauthorized) and redirect to home page if authentication fails
                 set.status = 401;
                 set.redirect = '/auth/home';
-                return; // Return without rendering the page
+                return;
         }
     })
     .get('/history', async (): Promise<any> => {

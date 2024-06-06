@@ -1,26 +1,39 @@
-// Middleware to check if the user is authenticated
-import ErrorMessage from "~/views/components/error-message";
+import { prisma } from "~/index";
 import jwt from "@elysiajs/jwt";
 
-export async function authMiddleware({jwt, set, cookie: { auth } }: any, next: Function) {
-    console.log(auth?.session);
-    if (!auth?.value) {
-        set.status = 401;
-        return <ErrorMessage message={'You are not connected'} />;
-    }
-
-    try {
-
-        const profile = await jwt.verify(auth.value, 'your_jwt_secret_key'); // Ensure to use your secret key
-        if (!profile) {
+export const authMiddleware = () => {
+    return async ({ jwt, set, cookie: { auth }, store }: any) => {
+        if (!auth?.value) {
+            set.status = 401;
             set.redirect = '/auth/login';
-            return;
+            return null;
         }
-        // Attach the profile to the request context if needed
-        set.profile = profile;
-        await next();
-    } catch (error) {
-        set.status = 401;
-        set.redirect = '/auth/login';
-    }
+
+        try {
+            const profile = await jwt.verify(auth.value, 'secret'); // Ensure to use your secret key
+            if (!profile) {
+                set.status = 401;
+                set.redirect = '/auth/login';
+                return null;
+            }
+
+            // Fetch user details based on the profile
+            const user = await prisma.user.findUnique({
+                where: { userId: profile.userId },
+            });
+
+            if (!user) {
+                set.status = 404;
+                set.redirect = '/auth/login';
+                return null;
+            }
+
+            return { profile, user };
+        } catch (error) {
+            console.error('Error during authentication', error);
+            set.status = 401;
+            set.redirect = '/auth/login';
+            return null;
+        }
+    };
 };

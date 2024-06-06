@@ -16,6 +16,71 @@ import {deviceDetectionMiddleware} from "~/middlewares/deviceDetection";
 export const authRouter = (app: Elysia) =>
     app.group("/auth", (app) =>
         app
+            .post(
+                "/login",
+                async ({ jwt, set, cookie: { auth }, body, request }: any) => {
+                    const { username, password } = body;
+                    // verify email/username
+                    const user = await prisma.user.findFirst({
+                        where: {
+                            OR: [
+                                { email: username },
+                                { username },
+                            ],
+                        },
+                    });
+
+                    if (!user) {
+                        set.status = 400;
+                        console.log("Invalid credentials");
+                        return {
+                            success: false,
+                            data: null,
+                            message: "Invalid credentials",
+                        };
+                    }
+
+                    // verify password
+                    const match = await comparePassword(password, user.saltPassword, user.hashPassword);
+                    if (!match) {
+                        set.status = 400;
+                        return {
+                            success: false,
+                            data: null,
+                            message: "Invalid credentials",
+                        };
+                    }
+
+                    // generate access token
+                    const accessToken = await jwt.sign({
+                        userId: user.userId,
+                    }, 'your_secret_key_here');
+                    auth.set({
+                        value: accessToken,
+                        httpOnly: true,
+                        maxAge: 15 * 60, // 15 minutes
+                        path: "/",
+                    });
+
+                    // Store the user profile in the request context
+                    request.profile = user;
+
+                    // Redirect based on user's family ID
+                    user.familyId === null ? set.redirect = "/auth/family" : set.redirect = "/";
+
+                    return {
+                        success: true,
+                        data: user,
+                        message: "Account logged in successfully",
+                    };
+                },
+                {
+                    body: t.Object({
+                        username: t.String(),
+                        password: t.String(),
+                    }),
+                }
+            )
             .get('/signup', async () => {
                     return (
                         <GuestLayout>
@@ -110,7 +175,8 @@ export const authRouter = (app: Elysia) =>
                     }),
                 }
             )
-            .get('/home', async (): Promise<any> => {
+            .get('/home', async ({profile}: any): Promise<any> => {
+                console.log('profile', profile);
                 return (
                     <GuestLayout>
                         <HomeGuest/>
@@ -125,72 +191,6 @@ export const authRouter = (app: Elysia) =>
                         </GuestLayout>
                     )
                 })
-            .post(
-                "/login",
-                async ({jwt, set, cookie: {auth}, body, store}: any) => {
-                    const {username, password} = body;
-                    // verify email/username
-                    const user = await prisma.user.findFirst({
-                        where: {
-                            OR: [
-                                {
-                                    email: username,
-                                },
-                                {
-                                    username,
-                                },
-                            ],
-                        },
-                    });
-
-                    if (!user) {
-                        set.status = 400;
-                        console.log("Invalid credentials");
-                        return {
-                            success: false,
-                            data: null,
-                            message: "Invalid credentials",
-                        };
-                    }
-
-                    // verify password
-                    const match = await comparePassword(password, user.saltPassword, user.hashPassword);
-                    if (!match) {
-                        set.status = 400;
-                        return {
-                            success: false,
-                            data: null,
-                            message: "Invalid credentials",
-                        };
-                    }
-
-                    // generate access
-                    const accessToken = await jwt.sign({
-                        userId: user.userId,
-                    });
-                    auth.set({
-                        value: accessToken,
-                        httpOnly: true,
-                        maxAge: 15 * 60, // 15 minutes
-                        path: "/",
-                    });
-                    store.user = user;
-                    console.log(user.familyId)
-                    user.familyId === null ? set.redirect = "/auth/family" : set.redirect = "/";
-                    set.redirect = "/";
-                    return {
-                        success: true,
-                        data: user,
-                        message: "Account logged in successfully",
-                    };
-                },
-                {
-                    body: t.Object({
-                        username: t.String(),
-                        password: t.String(),
-                    }),
-                }
-            )
             .get('/family', async ({store, set, jwt, cookie: {auth},}: any): Promise<any> => {
                 console.log("user", store.user)
                 // The token is automatically verified and the decoded payload is available as `jwt`
