@@ -316,13 +316,14 @@ export const authRouter = (app: Elysia) =>
                 familyName: t.String(),
             }),
         })
-            .get('/logout', async ({cookie: {auth}, set}: any) => {
+            .post('/logout', async ({cookie: {auth}, set}: any) => {
                 auth.set({
                     value: "",
                     httpOnly: true,
                     maxAge: 0,
                     path: "/",
                 });
+                set.redirect = "/auth/home";
                 return {
                     success: true,
                     message: "Account logout successfully",

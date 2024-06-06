@@ -11,6 +11,10 @@ import {getDailyQuestion, getFamilyByFamilyId, userAnsweredQuestion} from "~/ser
 import AnswerQuestion from "~/views/pages/auth/answerQuestion";
 import {getUsersByFamilyId} from "~/utils/db";
 import Parameters from "~/views/pages/auth/parameters";
+import Accessibility from "~/views/pages/accessibility";
+import CGV from "~/views/pages/auth/CGV";
+import CGU from "~/views/pages/auth/CGU";
+import ConfidentialityPolicies from "~/views/pages/auth/confidentialityPolicies";
 
 export const pageRouter = new Elysia()
     // Route handler
@@ -34,8 +38,8 @@ export const pageRouter = new Elysia()
             return;
         }
     })
-    .get('/answer-question', async ({ set, store }: any) => {
-        if (!store.user || !store.user.familyId) {
+    .get('/answer-question', async ({ set, user, profile }: any) => {
+        if (!profile || !user) {
             set.status = 401;
             set.redirect = '/auth/home';
             return;
@@ -44,7 +48,7 @@ export const pageRouter = new Elysia()
 
         return (
             <MainLayout>
-                <AnswerQuestion user={store.user} question={question} />
+                <AnswerQuestion user={user} question={question} />
             </MainLayout>
         );
     })
@@ -82,7 +86,6 @@ export const pageRouter = new Elysia()
     })
     .get('/profile', async ({ store, set, jwt, cookie: { auth } }: any): Promise<any> => {
         console.log('Initial store:', store);
-
         try {
             if (!store.user) {
                 const token = auth.value;
@@ -127,50 +130,48 @@ export const pageRouter = new Elysia()
             </MainLayout>
         );
     })
-    .get('/parameters', async ({ store, set, jwt, cookie: { auth } }: any): Promise<any> => {
-        console.log('Initial store:', store);
+    .get('/parameters', async ({profile, user, set}): Promise<any> => {
+
 
         try {
-            if (!store.user) {
-                const token = auth.value;
-                if (!token) {
-                    set.status = 401;
-                    set.redirect = '/auth/home';
-                    return;
-                }
-
-                const profile = await jwt.verify(token);
-                if (!profile) {
-                    set.status = 401;
-                    set.redirect = '/auth/home';
-                    return;
-                }
-
-                console.log('Profile:', profile);
-
-                store.user = await prisma.user.findUnique({
-                    where: {
-                        userId: profile.userId,
-                    },
-                });
-
-                if (!store.user) {
-                    set.status = 404;
-                    set.redirect = '/auth/home';
-                    return;
-                }
+            if (!profile || !user) {
+                set.status = 401;
+                set.redirect = '/auth/home';
+                return;
             }
+
         } catch (error) {
             console.error('Error during authentication', error);
             set.status = 500;
             set.redirect = '/auth/home';
             return;
         }
-        console.log('Updated store:', store);
 
         return (
             <MainLayout>
-                <Parameters user={store.user}/>
+                <Parameters user={user}/>
             </MainLayout>
         );
     })
+    .get('/confidentiality-policies' , async () => {
+        return (
+            <MainLayout>
+                <ConfidentialityPolicies />
+            </MainLayout>
+        );
+    })
+    .get('/CGV', async () => {
+        return (
+            <MainLayout>
+                <CGV />
+            </MainLayout>
+        );
+    })
+    .get('/CGU', async () => {
+        return (
+            <MainLayout>
+                <CGU />
+            </MainLayout>
+        );
+    })
+

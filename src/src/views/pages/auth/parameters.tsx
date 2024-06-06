@@ -19,9 +19,10 @@ export default function Parameters(){
                 <div class="flex flex-col items-start justify-between bg-lila rounded-2xl m-2">
 
                     <div class="flex flex-col items-center justify-evenly p-3 space-y-4 w-full">
-                        <ParametersButton icon={'fa-users-line'} display={'Accessibilité'} url={'/'}></ParametersButton>
-                        <ParametersButton icon={'fa-users-line'} display={'À propos'} url={'/'}></ParametersButton>
-                        <ParametersButton icon={'fa-users-line'} display={'Déconnection'} url={'/auth/logout'}></ParametersButton>
+                        <ParametersButton icon={'fa-users-line'} display={"Conditions générales d'utilisation"} url={'/CGU'} target={'#home-auth'} swap={'innerHTML'} method={'get'} ></ParametersButton>
+                        <ParametersButton icon={'fa-users-line'} display={'Conditions générales de vente'} url={'/CGV'} target={'#home-auth'} swap={'innerHTML'} method={'get'}></ParametersButton>
+                        <ParametersButton icon={'fa-users-line'} display={'Politique de confidentialité'} url={'/confidentiality-policies'} target={'#home-auth'} swap={'innerHTML'} method={'get'}></ParametersButton>
+                        <ParametersButton icon={'fa-users-line'} display={'Déconnection'} url={'/auth/logout'} target={'#home-auth'} swap={'innerHTML'} method={'post'}></ParametersButton>
                     </div>
                 </div>
             </div>
