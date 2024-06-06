@@ -151,7 +151,6 @@ export const authRouter = (app: Elysia) =>
                             data: null,
                             message: "Invalid credentials",
                         };
-
                     }
 
                     // verify password

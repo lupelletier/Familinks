@@ -10,7 +10,7 @@ import {logger} from "~/utils/logger";
 export const prisma = new PrismaClient();
 
 export const app = new Elysia()
-    .use(deviceDetectionMiddleware())
+
     .use(html())
     .use(
     staticPlugin({
@@ -20,12 +20,11 @@ export const app = new Elysia()
       },
     })
     )
-/*    .on('beforeHandle', async ({ request }) => {
+    .on('beforeHandle', async ({ request }) => {
         logger.info(
             `Handling request: ${request.method} ${request.url} - ${request.headers.get('user-agent')}`
         );
     })
-    */
    .onError(({ code, error }) => {
         return new Response(error.toString())
     })

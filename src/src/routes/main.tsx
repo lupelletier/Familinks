@@ -8,7 +8,6 @@ import {deviceDetectionMiddleware} from "~/middlewares/deviceDetection";
 
 export const mainRouter = new Elysia()
     mainRouter
-    .use(deviceDetectionMiddleware)
     .use(swagger())
         // get the user from the session
     .state('user', '' )

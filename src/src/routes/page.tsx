@@ -4,18 +4,11 @@ import ErrorMessage from '~/views/components/error-message';
 import {Html} from "@elysiajs/html";
 import Tree from "~/views/pages/auth/tree";
 import Profile from "~/views/pages/auth/profile";
-import History from "~/views/pages/auth/history";
 import QuestionHistory from "~/views/pages/auth/history";
-import {validateSession} from "~/middlewares/authentication";
-import jwt from "@elysiajs/jwt";
-import Login from "~/views/pages/guest/login";
-import {authMiddleware} from "~/middlewares/middleware";
 import Home from "~/views/pages/auth/home";
-import {logger} from "~/utils/logger";
 import {prisma} from "~/index";
 import {getDailyQuestion, getFamilyByFamilyId, userAnsweredQuestion} from "~/services/daily";
 import AnswerQuestion from "~/views/pages/auth/answerQuestion";
-import {profile} from "bun:jsc";
 import {getUsersByFamilyId} from "~/utils/db";
 
 export const pageRouter = new Elysia()
