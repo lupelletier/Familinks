@@ -31,7 +31,7 @@ export default function MainLayout(props: { children: any }): any {
       </head>
 
       <body class="bg-light font-color-dark">
-          <div id="desktop"
+          {/*<div id="desktop"
                class="w-full text-lg font-color-dark flex display-center justify-center items-center text-center mt-20">
               <div class="flex justify-center align-middle items-center text-center ">
                   <img src="/VIOLETTE_pasHappy1.png" alt="logo violette" class="w-1/3 "/>
@@ -44,7 +44,7 @@ export default function MainLayout(props: { children: any }): any {
               <div class="flex justify-center align-middle items-center text-center pb-20">
                   <img src="/app_qr_code.jpeg" alt="app qr code" class="w-1/4"/>
               </div>
-          </div>
+          </div>*/}
       <div id="main">
           <LoadingIndicator/>
           <div id="home-auth" class="w-full pb-16">
@@ -52,7 +52,6 @@ export default function MainLayout(props: { children: any }): any {
           </div>
               <MainNavigation/>
       </div>
-
 
       </body>
 

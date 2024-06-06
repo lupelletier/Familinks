@@ -79,17 +79,18 @@ body {
 #main {
   display: none;
 }
+
 #desktop {
   display: block;
 }
-@media (max-width: 500px){
+
+@media (max-width: 400px) {
   #desktop {
     display: none;
   }
-    #main {
-        display: block;
-    }
-
+  #main {
+    display: block;
+  }
   #message {
     display: block;
   }

@@ -8,6 +8,7 @@ import {authMiddleware} from "~/middlewares/middleware";
 import CGU from "~/views/pages/auth/CGU";
 import {Html} from "@elysiajs/html";
 import GuestLayout from "~/views/layouts/guest";
+import {deviceDetectionMiddleware} from "~/middlewares/deviceDetection";
 
 export const mainRouter = new Elysia()
     mainRouter
@@ -21,6 +22,7 @@ export const mainRouter = new Elysia()
     })
     .use(jwt({ name: "jwt", secret: "secret" }))
     .derive(authMiddleware())
+    .use(deviceDetectionMiddleware())
     .use(apiRouter)
     .use(pageRouter)
     .use(authRouter(mainRouter));
