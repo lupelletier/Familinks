@@ -15,4 +15,5 @@ familinks est une application conçue pour toute la famille. Elle repose sur un 
 Le but est de renouer un contact plus léger avec sa famille avec des questions accessibles, drôles et la possibilité d'interagir avec les réponses. Quel est le plat préféré de votre père ? Quel est le pire cadeau d’anniversaire que votre demi-frère ait jamais reçu ? Likez et commentez les réponses pour créer de nouvelles conversations ! Avec familinks, vous pouvez créer une habitude qui resserre les liens avec vos proches. 
 
 ### PoC: 
+https://bun-app-dev-u4hakpb-ca.blackcoast-00de81f0.swedencentral.azurecontainerapps.io/desktop
 
