@@ -2,7 +2,7 @@ import HxLink from "~/views/components/hx-link";
 
 export default function JoinFamilyForm() {
     return (
-        <form class="join-family-form" hx-post="/auth/join-family" hx-target="#home-guest" hx-swap="innerHTML" hx-push-url="true">
+        <form class="join-family-form" hx-post="/auth/join-family" hx-target="#home-guest" hx-swap="innerHTML" hx-push-url="true" hx-indicator="#loading-indicator">
             <div class="space-y-4">
                 <div>
                     <label for="familyCode" class="block text-gray-700 font-normal mb-2">Code famille</label>

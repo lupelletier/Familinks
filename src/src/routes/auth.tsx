@@ -12,7 +12,11 @@ import Family from "~/views/pages/guest/family";
 import CreateFamily from "~/views/pages/guest/createFamily";
 import {faker} from "@faker-js/faker";
 import {deviceDetectionMiddleware} from "~/middlewares/deviceDetection";
-
+// Utility function to detect desktop or mobile based on User-Agent
+function isDesktop(userAgent: string): boolean {
+    const mobileRegex = /Mobi|Android|iPhone|iPad|iPod|Opera Mini|IEMobile/;
+    return !mobileRegex.test(userAgent);
+}
 export const authRouter = (app: Elysia) =>
     app.group("/auth", (app) =>
         app
@@ -91,19 +95,15 @@ export const authRouter = (app: Elysia) =>
             )
             .post(
                 "/signup",
-                async ({body, set}: any) => {
-                    const {email, firstname, lastname, password, username, familyCode} = body;
-                    // validate duplicate email address
+                async ({ body, set }) => {
+                    const {username, firstname, lastname,   email, password  } = body;
+
+                    // Validate email uniqueness
                     const emailExists = await prisma.user.findUnique({
-                        where: {
-                            email,
-                        },
-                        select: {
-                            userId: true,
-                        },
+                        where: { email },
+                        select: { userId: true },
                     });
                     if (emailExists) {
-                        // Email already exists in the database
                         set.status = 400;
                         return {
                             success: false,
@@ -112,37 +112,35 @@ export const authRouter = (app: Elysia) =>
                         };
                     }
 
-                    // validate duplicate username
+                    // Validate username uniqueness
                     const usernameExists = await prisma.user.findUnique({
-                        where: {
-                            username,
-                        },
-                        select: {
-                            userId: true,
-                        },
+                        where: { username },
+                        select: { userId: true },
                     });
-                    const familyCodeExists = await getFamilyIdByCode(familyCode);
-                    if (!familyCodeExists) {
-                        set.status = 400;
-                        return {
-                            success: false,
-                            data: null,
-                            message: "Invalid family code.",
-                        };
-                    }
-
                     if (usernameExists) {
                         set.status = 400;
                         return {
                             success: false,
                             data: null,
-                            message: "Someone already taken this username.",
+                            message: "Someone already took this username.",
                         };
                     }
 
-                    // handle password
-                    const {hashPassword, saltPassword} = await hashPasswordFn(password);
-                    const familyId: number = await getFamilyIdByCode(familyCode);
+                 /*   let familyId = null;
+                    if (familyCode) {
+                        const familyCodeExists = await getFamilyIdByCode(familyCode);
+                        if (!familyCodeExists) {
+                            set.status = 400;
+                            return {
+                                success: false,
+                                data: null,
+                                message: "Invalid family code.",
+                            };
+                        }
+                        familyId = await getFamilyIdByCode(familyCode);
+                    }*/
+
+                    const { hashPassword, saltPassword } = await hashPasswordFn(password);
 
                     const newUser = await prisma.user.create({
                         data: {
@@ -152,13 +150,14 @@ export const authRouter = (app: Elysia) =>
                             hashPassword,
                             saltPassword,
                             username,
-                            familyId,
                         },
                     });
 
+                    // Redirect to login page upon successful signup
+                    set.redirect = '/auth/login'
                     return {
                         success: true,
-                        message: "Account created",
+                        message: "Account created. Redirecting to login...",
                         data: {
                             user: newUser,
                         },
@@ -171,17 +170,25 @@ export const authRouter = (app: Elysia) =>
                         email: t.String(),
                         username: t.String(),
                         password: t.String(),
-                        familyCode: t.String(),
+                        familyCode: t.Optional(t.String()), // Make familyCode optional
                     }),
                 }
             )
-            .get('/home', async ({profile}: any): Promise<any> => {
+            .get('/home', async ({profile, set, request}: any): Promise<any> => {
                 console.log('profile', profile);
-                return (
-                    <GuestLayout>
-                        <HomeGuest/>
-                    </GuestLayout>
-                )
+                const userAgent = request.headers.get('user-agent') || '';
+
+                if (isDesktop(userAgent)) {
+                    console.log("here")
+                    set.redirect = '/desktop';
+                } else {
+                    return (
+                        <GuestLayout>
+                            <HomeGuest/>
+                        </GuestLayout>
+                    )
+
+                }
             })
             .get('/login',
                 async (): Promise<string> => {
@@ -215,7 +222,7 @@ export const authRouter = (app: Elysia) =>
                     </GuestLayout>
                 )
             })
-            .post('join-family', async ({body, set, store, jwt, cookie: {auth}}: any) => {
+            .post('join-family', async ({body, set, user, profile}: any) => {
                 const {familyCode} = body;
                 // validate family code
                 const familyId = await getFamilyIdByCode(familyCode);
@@ -227,11 +234,7 @@ export const authRouter = (app: Elysia) =>
                     };
                 }
 
-                const user = store.user;
                 console.log(user)
-                if(!user.familyId) {
-                    const profile = await jwt.verify(auth.value);
-                    console.log('profile', profile);
 
                     // update user family
                     await prisma.user.update({
@@ -243,8 +246,6 @@ export const authRouter = (app: Elysia) =>
                         },
                     });
                     set.redirect = "/";
-                }
-
                 return {
                     success: true,
                     message: "Family joined successfully",
@@ -263,7 +264,7 @@ export const authRouter = (app: Elysia) =>
                     </GuestLayout>
                 )
             })
-            .post('/create-family', async ({body, set, store, jwt, cookie: {auth}}: any) => {
+            .post('/create-family', async ({body, set, profile}: any) => {
             try {
                 const { familyName } = body;
 
@@ -272,7 +273,6 @@ export const authRouter = (app: Elysia) =>
                     return { success: false, message: 'Family name is required' };
                 }
 
-                const profile = await jwt.verify(auth.value);
                 if (!profile) {
                     set.status = 401;
                     return { success: false, message: 'Unauthorized' };
@@ -296,7 +296,6 @@ export const authRouter = (app: Elysia) =>
                 });
 
                 // Update the store
-                store.user = user;
                 set.redirect = '/';
                 return {
                     success: true,

@@ -1,6 +1,6 @@
 export default function CreateFamilyForm() {
     return (
-        <form class="create-family-form" hx-post="/auth/create-family" hx-push-url="true">
+        <form class="create-family-form" hx-post="/auth/create-family" hx-target="#home-guest" hx-swap="innerHTML" hx-indicator="#loading-indicator">
             <div class="space-y-4">
                 <div>
                     <label for="familyName" class="block text-gray-700 font-normal mb-2">Nom de la famille</label>
@@ -14,7 +14,6 @@ export default function CreateFamilyForm() {
                     Créer cette famille
                 </button>
             </div>
-            <div id="login"></div>
         </form>
     )
 }

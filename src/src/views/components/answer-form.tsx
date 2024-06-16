@@ -5,7 +5,7 @@ import HxLink from "~/views/components/hx-link";
 
 export default function AnswerForm(props: { user: any, question: any}){
     return (
-        <form class="login-form py-4" hx-post="/api/answer-question" hx-target="#home-auth" hx-swap="innerHTML" hx-push-url="true">
+        <form class="login-form py-4" hx-post="/api/answer-question" hx-target="#home-auth" hx-swap="innerHTML" hx-push-url="true" hx-indicator="#loading-indicator">
             <p class="text-sm font-semibold px-2 py-2">{props.question.question}</p>
 
             <div class={'space-y-4'}>
@@ -21,7 +21,6 @@ export default function AnswerForm(props: { user: any, question: any}){
                     Répondre à la question
                 </button>
             </div>
-            <div id="login"></div>
         </form>
     )
 }

@@ -9,6 +9,7 @@ import CGU from "~/views/pages/auth/CGU";
 import {Html} from "@elysiajs/html";
 import GuestLayout from "~/views/layouts/guest";
 import {deviceDetectionMiddleware} from "~/middlewares/deviceDetection";
+import Desktop from "~/views/pages/guest/desktop";
 
 export const mainRouter = new Elysia()
     mainRouter
@@ -20,9 +21,18 @@ export const mainRouter = new Elysia()
             </GuestLayout>
         );
     })
+    .get('/desktop', async () => {
+        return (
+            <GuestLayout>
+                <Desktop/>
+            </GuestLayout>
+        )
+    })
     .use(jwt({ name: "jwt", secret: "secret" }))
     .derive(authMiddleware())
-    .use(deviceDetectionMiddleware())
+/*
+    .use(deviceDetectionMiddleware)
+*/
     .use(apiRouter)
     .use(pageRouter)
     .use(authRouter(mainRouter));

@@ -69,7 +69,12 @@ export default async function Profile(props: { user: any }) {
             <div class="px-4 text-xs">
                 Code de la famille : {family?.code}
             </div>
-            <ShareLink display="Partager sur WhatsApp" familyCode={family?.code} href={"https://wa.me/?text=Rejoins%20le%20groupe%20famille%20!%20"}/>
+            {family?.code ? (
+                <ShareLink display="Partager sur WhatsApp" familyCode={family?.code} href="https://wa.me/?text=" />
+                ):
+                <div></div>
+            }
+
         </div>
     );
 }

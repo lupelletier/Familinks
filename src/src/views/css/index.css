@@ -1,7 +1,8 @@
+@import url('satoshi.css');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-/*TODO: typo satochis*/
 
 html {
   font-family: 'Montserrat', sans-serif;
@@ -76,22 +77,6 @@ body {
   box-shadow: 0 -4px 6px -1px rgba(0, 0, 0, 0.1), 0 -2px 4px -1px rgba(0, 0, 0, 0.06);
 }
 
-#main {
-  display: none;
-}
-
-#desktop {
-  display: block;
-}
-
-@media (max-width: 400px) {
-  #desktop {
-    display: none;
-  }
-  #main {
+.desktop {
     display: block;
-  }
-  #message {
-    display: block;
-  }
 }

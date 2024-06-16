@@ -18,7 +18,7 @@ export default async function AnswerQuestion(props: { user: any, question: any }
                             <HxBackLink method="get" url="/" target="#home-auth" swap="innerHTML" style="left-0 underline pb-2"/>
                         <Badge name="Question du jour"/>
                     </div>
-                    <img src='/VIOLETTE_happy_1.png' alt="violette happy"/>
+                    <img src='/VIOLETTE_happy_1.png' alt="violette happy" class="w-16"/>
                 </div>
                 <div class="flex justify-between items-center px-2 font-bold font-color-dark">
                     Famille {family?.name}

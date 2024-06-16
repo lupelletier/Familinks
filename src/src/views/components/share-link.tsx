@@ -1,10 +1,18 @@
-export default function ShareLink(props: { familyCode: any, display: string, href: string }) {
-    console.log(props.familyCode)
+import React from 'react';
+
+const ShareLink = ({ display, familyCode, href }: any) => {
+    const fullHref = `${href}${encodeURIComponent(`Rejoins le groupe famille ! Utilise le code de famille : ${familyCode}`)}`;
 
     return (
-        <a href={props.href} class="border border-gray-300 rounded-full p-2 mx-4 my-4 flex items-center justify-center">
-            <img src="/whattsap.png" alt="WhatsApp icon" class="w-5 mr-1" />
-            <p class="text-xs font-semibold">{props.display}</p>
+        <a
+            href={fullHref}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="bg-green text-white py-2 px-4 rounded-full hover:bg-green-dark"
+        >
+            {display}
         </a>
     );
-}
+};
+
+export default ShareLink;

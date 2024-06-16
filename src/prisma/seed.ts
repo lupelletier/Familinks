@@ -30,6 +30,24 @@ const main = async () => {
                 saltPassword: saltPassword,
             },
         });
+        await prisma.user.create({
+            data: {
+                username: "violette",
+                firstname: "Violette",
+                lastname: "Pelletier",
+                email: "violette@gmail.com",
+                hashPassword: hashPassword,
+                saltPassword: saltPassword,
+            },
+        });
+
+        await prisma.family.create({
+            data: {
+                code: "FAM024",
+                name: "Violette",
+            },
+        });
+
         // Seed families
         const familySeed = new FamilySeed(4);
 
@@ -69,6 +87,13 @@ const main = async () => {
             })
         }
 
+        // seed demo question
+        await prisma.question.create({
+            data: {
+                question: "Quel est votre plat préféré ?",
+                createdAt: new Date(),
+            }
+        })
         // Get all questions
         const allQuestions = await prisma.question.findMany();
         console.log("All questions:", allQuestions);

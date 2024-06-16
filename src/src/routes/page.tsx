@@ -26,6 +26,11 @@ export const pageRouter = new Elysia()
                 return;
             }
             const question = await getDailyQuestion();
+            if (!user.familyId) {
+                set.status = 401;
+                set.redirect = '/auth/home';
+                return;
+            }
             return (
                 <MainLayout>
                     <Home user={user} question={question} />

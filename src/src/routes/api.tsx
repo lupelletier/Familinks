@@ -25,13 +25,13 @@ export const apiRouter = new Elysia().group('/api', app =>
       };
     })
     .use(swagger())
-      .post('/answer-question', async ({body, store, set}:any) => {
+      .post('/answer-question', async ({body, user, profile, set}:any) => {
             const question = await getDailyQuestion();
-            if (store.user) {
+            if (user) {
                 try {
                     await prisma.response.create({
                         data: {
-                            userId: store.user.userId,
+                            userId: profile.userId,
                             questionId: question.questionId,
                             response: body.response,
                         },

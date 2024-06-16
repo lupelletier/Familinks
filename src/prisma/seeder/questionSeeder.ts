@@ -14,6 +14,7 @@ class QuestionSeed extends Seeder {
             const question = faker.lorem.sentence();
             this._data.push({
                 question: question,
+                createdAt: new Date("2024-06-06"),
             });
         });
     }

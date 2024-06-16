@@ -25,7 +25,7 @@ export function deviceDetectionMiddleware() {
 }
 
 function isMobile(userAgent: string): boolean {
-    console.log("here");
     const mobileRegex = /Mobile|Android|iP(ad|hone)/i;
+    console.log(mobileRegex.test(userAgent));
     return mobileRegex.test(userAgent);
 }
